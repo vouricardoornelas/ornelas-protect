@@ -1,0 +1,16 @@
+{
+  "name": "Ornelas Protect",
+  "short_name": "Ornelas",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1d4ed8",
+  "icons": [
+    {
+      "src": "/Logo_Ornelas_Protect_final3.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
+Guarda com Ctrl+S e diz-me quando estiver feito! 🙂
