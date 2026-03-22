@@ -9,8 +9,8 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from
 // FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -72,7 +72,7 @@ function MainApp() {
 
 // CONTACT FORM COMPONENT
 function ContactForm() {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", consent: false });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", message: "", consent: false });
 
   const submit = async (e) => {
     e.preventDefault();
@@ -80,7 +80,7 @@ function ContactForm() {
 
     await addDoc(collection(db, "leads"), { ...form, status: "novo", notes: "", date: new Date().toISOString() });
     alert("Pedido recebido. Vamos entrar em contacto brevemente.");
-    setForm({ name: "", email: "", phone: "", message: "", consent: false });
+    setForm({ name: "", email: "", phone: "", service: "", message: "", consent: false });
   };
 
   return (
@@ -89,6 +89,13 @@ function ContactForm() {
       <input placeholder="Nome" value={form.name} onChange={(e)=>setForm({...form,name:e.target.value})} className="w-full mb-2 p-2 border" />
       <input placeholder="Email" value={form.email} onChange={(e)=>setForm({...form,email:e.target.value})} className="w-full mb-2 p-2 border" />
       <input placeholder="Telefone" value={form.phone} onChange={(e)=>setForm({...form,phone:e.target.value})} className="w-full mb-2 p-2 border" />
+      <select value={form.service} onChange={(e)=>setForm({...form,service:e.target.value})} className="w-full mb-2 p-2 border">
+        <option value="">Tipo de serviço</option>
+        <option value="Mediação Imobiliária">Mediação Imobiliária</option>
+        <option value="Automóvel">Automóvel</option>
+        <option value="Seguros">Seguros</option>
+        <option value="Eventos">Eventos</option>
+      </select>
       <textarea placeholder="Mensagem" value={form.message} onChange={(e)=>setForm({...form,message:e.target.value})} className="w-full mb-2 p-2 border" />
       <label className="text-sm">
         <input type="checkbox" checked={form.consent} onChange={(e)=>setForm({...form,consent:e.target.checked})} /> Autorizo o tratamento dos meus dados para contacto comercial
@@ -129,6 +136,7 @@ function Dashboard() {
           <p><strong>{l.name}</strong></p>
           <p>{l.email}</p>
           <p>{l.phone}</p>
+          {l.service && <p>Serviço: <strong>{l.service}</strong></p>}
           <p>Status: {l.status}</p>
           <textarea placeholder="Notas" defaultValue={l.notes} onBlur={e=>updateNotes(l.id,e.target.value)} className="w-full border mt-2 p-1" />
           <div className="flex gap-2 mt-2">
