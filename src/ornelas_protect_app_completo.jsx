@@ -17,7 +17,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// IMAGENS DE FUNDO POR SERVIÇO (lado esquerdo)
+// IMAGENS DE FUNDO POR SERVIÇO
 const bgImages = {
   default: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200&q=80",
   "Seguros": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80",
@@ -26,7 +26,14 @@ const bgImages = {
   "Eventos": "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1200&q=80",
 };
 
-// CONCELHOS POR ZONA
+const serviceInfo = {
+  default: { title: "Bem-vindo à Ornelas Protect", subtitle: "As suas decisões protegidas pela experiência", tags: ["Seguros", "Imobiliária", "Automóvel", "Eventos"] },
+  "Seguros": { title: "Seguros para a sua tranquilidade", subtitle: "Protegemos o que mais importa para si e para a sua família", tags: ["Vida", "Auto", "Saúde", "Habitação", "Empresas"] },
+  "Mediação Imobiliária": { title: "O imóvel dos seus sonhos", subtitle: "Encontramos a melhor oportunidade no mercado para si", tags: ["Compra", "Venda", "Apartamentos", "Casas", "Terrenos"] },
+  "Mediação Automóvel": { title: "O carro certo para si", subtitle: "As melhores marcas com as melhores condições de financiamento", tags: ["Novos", "Usados", "Financiamento", "Todas as marcas"] },
+  "Eventos": { title: "Momentos inesquecíveis", subtitle: "Organizamos o seu evento com todo o detalhe e dedicação", tags: ["Casamentos", "Batizados", "Eventos Empresariais"] },
+};
+
 const concelhosPorZona = {
   "Continente": [
     "Abrantes","Águeda","Aguiar da Beira","Alandroal","Albergaria-a-Velha","Albufeira","Alcácer do Sal","Alcanena","Alcobaça","Alcochete","Alcoutim","Alenquer","Alfândega da Fé","Alijó","Aljezur","Aljustrel","Almada","Almeida","Almeirim","Almodôvar","Alpiarça","Alter do Chão","Alvaiázere","Alvito","Amadora","Amarante","Amares","Anadia","Ansião","Arcos de Valdevez","Arganil","Armamar","Arouca","Arraiolos","Arronches","Arruda dos Vinhos","Aveiro","Avis","Azambuja",
@@ -42,47 +49,66 @@ const concelhosPorZona = {
   "Açores": ["Angra do Heroísmo","Calheta (São Jorge)","Corvo","Horta","Lagoa (São Miguel)","Lajes das Flores","Lajes do Pico","Madalena","Nordeste","Ponta Delgada","Povoação","Praia da Vitória","Ribeira Grande","Santa Cruz da Graciosa","Santa Cruz das Flores","São Roque do Pico","Velas","Vila do Porto","Vila Franca do Campo"]
 };
 
-// Textos por serviço para o lado esquerdo
-const serviceInfo = {
-  default: { title: "Bem-vindo à Ornelas Protect", subtitle: "As suas decisões protegidas pela experiência", tags: ["Seguros", "Imobiliária", "Automóvel", "Eventos"] },
-  "Seguros": { title: "Seguros para a sua tranquilidade", subtitle: "Protegemos o que mais importa para si e para a sua família", tags: ["Vida", "Auto", "Saúde", "Habitação", "Empresas"] },
-  "Mediação Imobiliária": { title: "O imóvel dos seus sonhos", subtitle: "Encontramos a melhor oportunidade no mercado para si", tags: ["Compra", "Venda", "Apartamentos", "Casas", "Terrenos"] },
-  "Mediação Automóvel": { title: "O carro certo para si", subtitle: "As melhores marcas com as melhores condições de financiamento", tags: ["Novos", "Usados", "Financiamento", "Todas as marcas"] },
-  "Eventos": { title: "Momentos inesquecíveis", subtitle: "Organizamos o seu evento com todo o detalhe e dedicação", tags: ["Casamentos", "Batizados", "Eventos Empresariais"] },
-};
-
 // APP PRINCIPAL
 export default function OrnelasProtectApp() {
   const [user, setUser] = useState(null);
+  const [view, setView] = useState("form");
+  const [currentService, setCurrentService] = useState("default");
+  const [showLogin, setShowLogin] = useState(false);
+
   useEffect(() => { onAuthStateChanged(auth, setUser); }, []);
-  if (!user) return <Login />;
-  return <MainApp />;
+
+  // Se clicar em Leads ou Privacidade sem estar logado, mostra login
+  if (showLogin && !user) {
+    return <Login onBack={() => setShowLogin(false)} />;
+  }
+
+  return (
+    <MainApp
+      user={user}
+      view={view}
+      setView={(v) => {
+        if ((v === "dashboard" || v === "privacy") && !user) {
+          setShowLogin(true);
+        } else {
+          setView(v);
+          setShowLogin(false);
+        }
+      }}
+      currentService={currentService}
+      setCurrentService={setCurrentService}
+    />
+  );
 }
 
 // LOGIN COMPONENT
-function Login() {
+function Login({ onBack }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const login = async () => { await signInWithEmailAndPassword(auth, email, password); };
+  const login = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (e) {
+      alert("Email ou password incorretos.");
+    }
+  };
   return (
     <div className="min-h-screen flex">
-      {/* Lado esquerdo */}
       <div className="hidden md:flex w-1/2 relative items-center justify-center" style={{backgroundImage: `url(${bgImages.default})`, backgroundSize: "cover", backgroundPosition: "center"}}>
         <div className="absolute inset-0 bg-blue-900/70" />
         <div className="relative text-white text-center p-8">
-          <img src="/Logo_Ornelas_Protect_final3.png" className="w-40 mx-auto mb-6" />
+          <img src="/Logo_Ornelas_Protect_final3.png" className="w-64 mx-auto mb-6 rounded-xl shadow-lg" />
           <h1 className="text-3xl font-bold mb-2">Ornelas Protect</h1>
           <p className="text-blue-200 text-lg">As suas decisões protegidas pela experiência</p>
         </div>
       </div>
-      {/* Lado direito */}
       <div className="w-full md:w-1/2 flex items-center justify-center bg-gray-50 p-8">
         <div className="w-full max-w-sm">
-          <img src="/Logo_Ornelas_Protect_final3.png" className="w-20 mx-auto mb-6 md:hidden" />
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Entrar</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Área Reservada</h2>
           <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} className="block w-full mb-3 border border-gray-300 p-3 rounded-lg" />
           <input placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)} className="block w-full mb-4 border border-gray-300 p-3 rounded-lg" />
-          <button onClick={login} className="w-full bg-blue-700 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition">Entrar</button>
+          <button onClick={login} className="w-full bg-blue-700 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition mb-3">Entrar</button>
+          {onBack && <button onClick={onBack} className="w-full text-gray-500 text-sm hover:text-gray-700 transition">← Voltar ao formulário</button>}
         </div>
       </div>
     </div>
@@ -90,9 +116,7 @@ function Login() {
 }
 
 // MAIN APP COMPONENT
-function MainApp() {
-  const [view, setView] = useState("form");
-  const [currentService, setCurrentService] = useState("default");
+function MainApp({ user, view, setView, currentService, setCurrentService }) {
   const bg = bgImages[currentService] || bgImages.default;
   const info = serviceInfo[currentService] || serviceInfo.default;
 
@@ -102,18 +126,20 @@ function MainApp() {
       <div className="bg-blue-900 text-white px-4 py-2 flex gap-2 items-center shadow">
         <img src="/Logo_Ornelas_Protect_final3.png" className="w-8 h-8 rounded mr-2" />
         <button onClick={() => setView("form")} className={`px-3 py-1 rounded text-sm transition ${view==="form" ? "bg-white text-blue-900 font-semibold" : "hover:bg-blue-700"}`}>Formulário</button>
-        <button onClick={() => setView("dashboard")} className={`px-3 py-1 rounded text-sm transition ${view==="dashboard" ? "bg-white text-blue-900 font-semibold" : "hover:bg-blue-700"}`}>Leads</button>
-        <button onClick={() => setView("privacy")} className={`px-3 py-1 rounded text-sm transition ${view==="privacy" ? "bg-white text-blue-900 font-semibold" : "hover:bg-blue-700"}`}>Privacidade</button>
+        <button onClick={() => setView("dashboard")} className={`px-3 py-1 rounded text-sm transition ${view==="dashboard" ? "bg-white text-blue-900 font-semibold" : "hover:bg-blue-700"}`}>Leads 🔒</button>
+        <button onClick={() => { setView("privacy"); }} className={`px-3 py-1 rounded text-sm transition ${view==="privacy" ? "bg-white text-blue-900 font-semibold" : "hover:bg-blue-700"}`}>Privacidade</button>
         <div className="ml-auto">
-          <button onClick={() => signOut(auth)} className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition">Logout</button>
+          {user
+            ? <button onClick={() => signOut(auth)} className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition">Logout</button>
+            : <button onClick={() => setView("dashboard")} className="bg-white text-blue-900 px-3 py-1 rounded text-sm font-semibold hover:bg-blue-100 transition">Login</button>
+          }
         </div>
       </div>
 
-      {/* Conteúdo principal */}
+      {/* Conteúdo */}
       {view === "form" ? (
         <div className="flex flex-1">
-          {/* Lado esquerdo — imagem dinâmica */}
-          <div className="hidden md:flex w-1/2 relative flex-col items-center justify-center" style={{backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center", transition: "background-image 0.5s ease"}}>
+          <div className="hidden md:flex w-1/2 relative flex-col items-center justify-center" style={{backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center"}}>
             <div className="absolute inset-0 bg-blue-900/65" />
             <div className="relative text-white text-center p-10">
               <img src="/Logo_Ornelas_Protect_final3.png" className="w-64 mx-auto mb-6 rounded-xl shadow-lg" />
@@ -126,19 +152,14 @@ function MainApp() {
               </div>
             </div>
           </div>
-          {/* Lado direito — formulário */}
           <div className="w-full md:w-1/2 bg-gray-50 flex items-start justify-center p-6 overflow-y-auto">
             <ContactForm onServiceChange={setCurrentService} />
           </div>
         </div>
       ) : view === "dashboard" ? (
-        <div className="flex-1 bg-gray-100 p-4 overflow-y-auto">
-          <Dashboard />
-        </div>
+        <div className="flex-1 bg-gray-100 p-4 overflow-y-auto"><Dashboard /></div>
       ) : (
-        <div className="flex-1 bg-gray-100 p-4 overflow-y-auto">
-          <PrivacyPolicy />
-        </div>
+        <div className="flex-1 bg-gray-100 p-4 overflow-y-auto"><PrivacyPolicy /></div>
       )}
     </div>
   );
@@ -173,11 +194,9 @@ function ContactForm({ onServiceChange }) {
   return (
     <form onSubmit={submit} className="w-full max-w-md py-4">
       <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">Pedido de Contacto</h2>
-
       <input placeholder="Nome" value={form.name} onChange={e => f("name", e.target.value)} className={inp} />
       <input placeholder="Email" value={form.email} onChange={e => f("email", e.target.value)} className={inp} />
       <input placeholder="Telefone" value={form.phone} onChange={e => f("phone", e.target.value)} className={inp} />
-
       <select value={form.service} onChange={e => { const s = e.target.value; setForm({...emptyForm, name: form.name, email: form.email, phone: form.phone, message: form.message, consent: form.consent, service: s}); onServiceChange(s || "default"); }} className={sel}>
         <option value="">Tipo de serviço</option>
         <option value="Seguros">Seguros</option>
@@ -190,12 +209,8 @@ function ContactForm({ onServiceChange }) {
       {form.service === "Seguros" && (
         <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
           <option value="">Tipo de seguro</option>
-          <option value="Vida">Vida</option>
-          <option value="Auto">Auto</option>
-          <option value="Moto">Moto</option>
-          <option value="Saúde">Saúde</option>
-          <option value="Habitação">Habitação</option>
-          <option value="Poupança">Poupança</option>
+          <option value="Vida">Vida</option><option value="Auto">Auto</option><option value="Moto">Moto</option>
+          <option value="Saúde">Saúde</option><option value="Habitação">Habitação</option><option value="Poupança">Poupança</option>
           <option value="Empresas - Acidentes de Trabalho">Empresas - Acidentes de Trabalho</option>
           <option value="Empresas - Responsabilidade Civil">Empresas - Responsabilidade Civil</option>
           <option value="Outro">Outro</option>
@@ -207,26 +222,18 @@ function ContactForm({ onServiceChange }) {
         <>
           <select value={form.operacao} onChange={e => f("operacao", e.target.value)} className={sel}>
             <option value="">Compra ou Venda?</option>
-            <option value="Compra">Compra</option>
-            <option value="Venda">Venda</option>
+            <option value="Compra">Compra</option><option value="Venda">Venda</option>
           </select>
           <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
             <option value="">Tipo de imóvel</option>
-            <option value="Apartamento">Apartamento</option>
-            <option value="Casa">Casa</option>
-            <option value="Loja">Loja</option>
-            <option value="Terreno">Terreno</option>
-            <option value="Outro">Outro</option>
+            <option value="Apartamento">Apartamento</option><option value="Casa">Casa</option>
+            <option value="Loja">Loja</option><option value="Terreno">Terreno</option><option value="Outro">Outro</option>
           </select>
           {(form.subcategory === "Apartamento" || form.subcategory === "Casa") && (
             <select value={form.fracao} onChange={e => f("fracao", e.target.value)} className={sel}>
               <option value="">Tipologia</option>
-              <option value="T0">T0</option>
-              <option value="T1">T1</option>
-              <option value="T2">T2</option>
-              <option value="T3">T3</option>
-              <option value="T4">T4</option>
-              <option value="T4+">T4+</option>
+              <option value="T0">T0</option><option value="T1">T1</option><option value="T2">T2</option>
+              <option value="T3">T3</option><option value="T4">T4</option><option value="T4+">T4+</option>
             </select>
           )}
           {form.subcategory === "Terreno" && (
@@ -235,9 +242,7 @@ function ContactForm({ onServiceChange }) {
               <select value={form.efeitoTerreno} onChange={e => f("efeitoTerreno", e.target.value)} className={sel}>
                 <option value="">Efeito do terreno</option>
                 <option value="Construção Habitacional">Construção Habitacional</option>
-                <option value="Armazéns">Armazéns</option>
-                <option value="Empresarial">Empresarial</option>
-                <option value="Outro">Outro</option>
+                <option value="Armazéns">Armazéns</option><option value="Empresarial">Empresarial</option><option value="Outro">Outro</option>
               </select>
             </>
           )}
@@ -245,16 +250,12 @@ function ContactForm({ onServiceChange }) {
             <>
               <select value={form.zonaRegiao} onChange={e => { f("zonaRegiao", e.target.value); f("concelho", ""); }} className={sel}>
                 <option value="">Zona de interesse</option>
-                <option value="Continente">Continente</option>
-                <option value="Madeira">Madeira</option>
-                <option value="Açores">Açores</option>
+                <option value="Continente">Continente</option><option value="Madeira">Madeira</option><option value="Açores">Açores</option>
               </select>
               {form.zonaRegiao && (
                 <select value={form.concelho} onChange={e => f("concelho", e.target.value)} className={sel}>
                   <option value="">Concelho</option>
-                  {concelhosPorZona[form.zonaRegiao].map(c => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
+                  {concelhosPorZona[form.zonaRegiao].map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               )}
             </>
@@ -267,8 +268,7 @@ function ContactForm({ onServiceChange }) {
         <>
           <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
             <option value="">Novo ou Usado?</option>
-            <option value="Novo">Novo</option>
-            <option value="Usado">Usado</option>
+            <option value="Novo">Novo</option><option value="Usado">Usado</option>
           </select>
           <select value={form.marca} onChange={e => f("marca", e.target.value)} className={sel}>
             <option value="">Marca</option>
@@ -329,10 +329,8 @@ function ContactForm({ onServiceChange }) {
         <>
           <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
             <option value="">Tipo de evento</option>
-            <option value="Casamento">Casamento</option>
-            <option value="Batizado">Batizado</option>
-            <option value="Evento de Empresa">Evento de Empresa</option>
-            <option value="Outro">Outro</option>
+            <option value="Casamento">Casamento</option><option value="Batizado">Batizado</option>
+            <option value="Evento de Empresa">Evento de Empresa</option><option value="Outro">Outro</option>
           </select>
           {(form.subcategory === "Casamento" || form.subcategory === "Batizado" || form.subcategory === "Evento de Empresa") && (
             <>
@@ -432,12 +430,95 @@ function Dashboard() {
 // PRIVACY POLICY COMPONENT
 function PrivacyPolicy() {
   return (
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow mt-6">
-      <h2 className="font-bold text-xl mb-4 text-blue-800">Política de Privacidade</h2>
-      <p className="mb-3 text-gray-700">Somos a Ornelas Protect e respeitamos a sua privacidade. Os dados recolhidos (nome, email, telefone, mensagem) são utilizados exclusivamente para contacto comercial.</p>
-      <p className="mb-3 text-gray-700">Tem o direito de aceder, corrigir e eliminar os seus dados em qualquer momento. Para isso, contacte-nos através dos canais disponíveis.</p>
-      <p className="mb-3 text-gray-700">Consentimento explícito é necessário antes de submeter qualquer formulário.</p>
-      <p className="text-gray-700">Os dados são armazenados de forma segura na nossa cloud (Firebase) e apenas utilizadores autorizados têm acesso.</p>
+    <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow mt-6 mb-10">
+      <h2 className="font-bold text-2xl mb-1 text-blue-900">Política de Privacidade</h2>
+      <p className="text-sm text-gray-400 mb-6">Ornelas Protect — em conformidade com o RGPD (Regulamento UE 2016/679)</p>
+
+      <section className="mb-6">
+        <h3 className="font-semibold text-lg text-blue-800 mb-2">1. Responsável pelo Tratamento</h3>
+        <p className="text-gray-700">A <strong>Ornelas Protect</strong> é a entidade responsável pelo tratamento dos dados pessoais recolhidos através deste formulário, nos termos do Regulamento Geral sobre a Proteção de Dados (RGPD) — Regulamento (UE) 2016/679 do Parlamento Europeu e do Conselho, de 27 de abril de 2016.</p>
+      </section>
+
+      <section className="mb-6">
+        <h3 className="font-semibold text-lg text-blue-800 mb-2">2. Dados Recolhidos</h3>
+        <p className="text-gray-700 mb-2">Recolhemos os seguintes dados pessoais:</p>
+        <ul className="list-disc list-inside text-gray-700 space-y-1">
+          <li>Nome completo</li>
+          <li>Endereço de email</li>
+          <li>Número de telefone</li>
+          <li>Informações sobre o serviço pretendido</li>
+          <li>Mensagem livre (opcional)</li>
+        </ul>
+      </section>
+
+      <section className="mb-6">
+        <h3 className="font-semibold text-lg text-blue-800 mb-2">3. Finalidade e Base Legal do Tratamento</h3>
+        <p className="text-gray-700 mb-3">Os dados são tratados com as seguintes finalidades e bases legais:</p>
+        <div className="overflow-x-auto rounded-lg border border-gray-200">
+          <table className="w-full text-sm">
+            <thead className="bg-blue-50">
+              <tr>
+                <th className="text-left p-3 font-semibold text-blue-900">Finalidade</th>
+                <th className="text-left p-3 font-semibold text-blue-900">Base Legal (RGPD)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-t border-gray-100">
+                <td className="p-3 text-gray-700">Responder ao pedido de contacto</td>
+                <td className="p-3 text-gray-700">Art. 6.º, n.º 1, al. b) — Execução de pré-contrato</td>
+              </tr>
+              <tr className="border-t border-gray-100 bg-gray-50">
+                <td className="p-3 text-gray-700">Contacto comercial e envio de propostas</td>
+                <td className="p-3 text-gray-700">Art. 6.º, n.º 1, al. a) — Consentimento do titular</td>
+              </tr>
+              <tr className="border-t border-gray-100">
+                <td className="p-3 text-gray-700">Cumprimento de obrigações legais</td>
+                <td className="p-3 text-gray-700">Art. 6.º, n.º 1, al. c) — Obrigação legal</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="mb-6">
+        <h3 className="font-semibold text-lg text-blue-800 mb-2">4. Conservação dos Dados</h3>
+        <p className="text-gray-700">Os dados pessoais são conservados pelo período estritamente necessário à prossecução das finalidades para que foram recolhidos, ou enquanto existir relação comercial ativa. Findo esse período, os dados serão eliminados ou anonimizados, salvo obrigação legal de conservação por período superior.</p>
+      </section>
+
+      <section className="mb-6">
+        <h3 className="font-semibold text-lg text-blue-800 mb-2">5. Partilha de Dados com Terceiros</h3>
+        <p className="text-gray-700">Os dados pessoais não são vendidos, cedidos ou partilhados com terceiros para fins comerciais. Podem ser partilhados com prestadores de serviços tecnológicos (como a Google Firebase, utilizada para armazenamento seguro), que atuam como subcontratantes e estão sujeitos a acordos de proteção de dados adequados.</p>
+      </section>
+
+      <section className="mb-6">
+        <h3 className="font-semibold text-lg text-blue-800 mb-2">6. Direitos do Titular dos Dados</h3>
+        <p className="text-gray-700 mb-2">Nos termos do RGPD, o titular dos dados tem os seguintes direitos:</p>
+        <ul className="list-disc list-inside text-gray-700 space-y-1">
+          <li><strong>Direito de acesso</strong> — saber quais os dados que temos sobre si</li>
+          <li><strong>Direito de retificação</strong> — corrigir dados inexatos ou incompletos</li>
+          <li><strong>Direito ao apagamento</strong> — solicitar a eliminação dos seus dados</li>
+          <li><strong>Direito à limitação</strong> — restringir o tratamento em determinadas circunstâncias</li>
+          <li><strong>Direito à portabilidade</strong> — receber os seus dados em formato estruturado</li>
+          <li><strong>Direito de oposição</strong> — opor-se ao tratamento para fins de marketing direto</li>
+          <li><strong>Direito de retirar o consentimento</strong> — em qualquer momento, sem prejuízo da licitude do tratamento anterior</li>
+        </ul>
+        <p className="text-gray-700 mt-2">Para exercer qualquer um destes direitos, contacte-nos através dos canais disponíveis. Responderemos no prazo máximo de 30 dias.</p>
+      </section>
+
+      <section className="mb-6">
+        <h3 className="font-semibold text-lg text-blue-800 mb-2">7. Segurança dos Dados</h3>
+        <p className="text-gray-700">Implementamos medidas técnicas e organizativas adequadas para proteger os seus dados pessoais contra acesso não autorizado, perda, destruição ou divulgação. O armazenamento é realizado em servidores seguros com controlo de acesso restrito.</p>
+      </section>
+
+      <section className="mb-6">
+        <h3 className="font-semibold text-lg text-blue-800 mb-2">8. Reclamações</h3>
+        <p className="text-gray-700">Se considerar que o tratamento dos seus dados pessoais viola o RGPD, tem o direito de apresentar reclamação à autoridade de controlo competente em Portugal: <strong>Comissão Nacional de Proteção de Dados (CNPD)</strong> — <a href="https://www.cnpd.pt" target="_blank" rel="noreferrer" className="text-blue-600 underline">www.cnpd.pt</a>.</p>
+      </section>
+
+      <section>
+        <h3 className="font-semibold text-lg text-blue-800 mb-2">9. Alterações a esta Política</h3>
+        <p className="text-gray-700">A presente Política de Privacidade pode ser atualizada periodicamente. Recomendamos a consulta regular deste documento.</p>
+      </section>
     </div>
   );
 }
