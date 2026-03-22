@@ -17,13 +17,13 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// IMAGENS DE FUNDO POR SERVIÇO
+// IMAGENS DE FUNDO POR SERVIÇO (lado esquerdo)
 const bgImages = {
-  default: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1600&q=80",
-  "Seguros": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1600&q=80",
-  "Mediação Imobiliária": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&q=80",
-  "Mediação Automóvel": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1600&q=80",
-  "Eventos": "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1600&q=80",
+  default: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200&q=80",
+  "Seguros": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80",
+  "Mediação Imobiliária": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80",
+  "Mediação Automóvel": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1200&q=80",
+  "Eventos": "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1200&q=80",
 };
 
 // CONCELHOS POR ZONA
@@ -42,6 +42,15 @@ const concelhosPorZona = {
   "Açores": ["Angra do Heroísmo","Calheta (São Jorge)","Corvo","Horta","Lagoa (São Miguel)","Lajes das Flores","Lajes do Pico","Madalena","Nordeste","Ponta Delgada","Povoação","Praia da Vitória","Ribeira Grande","Santa Cruz da Graciosa","Santa Cruz das Flores","São Roque do Pico","Velas","Vila do Porto","Vila Franca do Campo"]
 };
 
+// Textos por serviço para o lado esquerdo
+const serviceInfo = {
+  default: { title: "Bem-vindo à Ornelas Protect", subtitle: "As suas decisões protegidas pela experiência", tags: ["Seguros", "Imobiliária", "Automóvel", "Eventos"] },
+  "Seguros": { title: "Seguros para a sua tranquilidade", subtitle: "Protegemos o que mais importa para si e para a sua família", tags: ["Vida", "Auto", "Saúde", "Habitação", "Empresas"] },
+  "Mediação Imobiliária": { title: "O imóvel dos seus sonhos", subtitle: "Encontramos a melhor oportunidade no mercado para si", tags: ["Compra", "Venda", "Apartamentos", "Casas", "Terrenos"] },
+  "Mediação Automóvel": { title: "O carro certo para si", subtitle: "As melhores marcas com as melhores condições de financiamento", tags: ["Novos", "Usados", "Financiamento", "Todas as marcas"] },
+  "Eventos": { title: "Momentos inesquecíveis", subtitle: "Organizamos o seu evento com todo o detalhe e dedicação", tags: ["Casamentos", "Batizados", "Eventos Empresariais"] },
+};
+
 // APP PRINCIPAL
 export default function OrnelasProtectApp() {
   const [user, setUser] = useState(null);
@@ -56,13 +65,25 @@ function Login() {
   const [password, setPassword] = useState("");
   const login = async () => { await signInWithEmailAndPassword(auth, email, password); };
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{backgroundImage: `url(${bgImages.default})`, backgroundSize: "cover", backgroundPosition: "center"}}>
-      <div className="absolute inset-0 bg-black/50" />
-      <div className="relative bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm">
-        <img src="/Logo_Ornelas_Protect_final3.png" className="w-24 mx-auto mb-6" />
-        <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} className="block w-full mb-3 border border-gray-300 p-3 rounded-lg" />
-        <input placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)} className="block w-full mb-4 border border-gray-300 p-3 rounded-lg" />
-        <button onClick={login} className="w-full bg-blue-700 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition">Entrar</button>
+    <div className="min-h-screen flex">
+      {/* Lado esquerdo */}
+      <div className="hidden md:flex w-1/2 relative items-center justify-center" style={{backgroundImage: `url(${bgImages.default})`, backgroundSize: "cover", backgroundPosition: "center"}}>
+        <div className="absolute inset-0 bg-blue-900/70" />
+        <div className="relative text-white text-center p-8">
+          <img src="/Logo_Ornelas_Protect_final3.png" className="w-40 mx-auto mb-6" />
+          <h1 className="text-3xl font-bold mb-2">Ornelas Protect</h1>
+          <p className="text-blue-200 text-lg">As suas decisões protegidas pela experiência</p>
+        </div>
+      </div>
+      {/* Lado direito */}
+      <div className="w-full md:w-1/2 flex items-center justify-center bg-gray-50 p-8">
+        <div className="w-full max-w-sm">
+          <img src="/Logo_Ornelas_Protect_final3.png" className="w-20 mx-auto mb-6 md:hidden" />
+          <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Entrar</h2>
+          <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} className="block w-full mb-3 border border-gray-300 p-3 rounded-lg" />
+          <input placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)} className="block w-full mb-4 border border-gray-300 p-3 rounded-lg" />
+          <button onClick={login} className="w-full bg-blue-700 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition">Entrar</button>
+        </div>
       </div>
     </div>
   );
@@ -71,21 +92,54 @@ function Login() {
 // MAIN APP COMPONENT
 function MainApp() {
   const [view, setView] = useState("form");
-  const [currentService, setCurrentService] = useState("");
+  const [currentService, setCurrentService] = useState("default");
   const bg = bgImages[currentService] || bgImages.default;
+  const info = serviceInfo[currentService] || serviceInfo.default;
 
   return (
-    <div className="min-h-screen relative" style={{backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center", transition: "background-image 0.5s ease"}}>
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="relative z-10 p-4">
-        <div className="flex gap-2 mb-4 items-center">
-          <button onClick={() => signOut(auth)} className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">Logout</button>
-          <button onClick={() => setView("form")} className={`px-3 py-1 rounded transition ${view==="form" ? "bg-blue-700 text-white" : "bg-white/80 text-gray-800 hover:bg-white"}`}>Formulário</button>
-          <button onClick={() => setView("dashboard")} className={`px-3 py-1 rounded transition ${view==="dashboard" ? "bg-blue-700 text-white" : "bg-white/80 text-gray-800 hover:bg-white"}`}>Leads</button>
-          <button onClick={() => setView("privacy")} className={`px-3 py-1 rounded transition ${view==="privacy" ? "bg-blue-700 text-white" : "bg-white/80 text-gray-800 hover:bg-white"}`}>Política de Privacidade</button>
+    <div className="min-h-screen flex flex-col">
+      {/* Navbar */}
+      <div className="bg-blue-900 text-white px-4 py-2 flex gap-2 items-center shadow">
+        <img src="/Logo_Ornelas_Protect_final3.png" className="w-8 h-8 rounded mr-2" />
+        <button onClick={() => setView("form")} className={`px-3 py-1 rounded text-sm transition ${view==="form" ? "bg-white text-blue-900 font-semibold" : "hover:bg-blue-700"}`}>Formulário</button>
+        <button onClick={() => setView("dashboard")} className={`px-3 py-1 rounded text-sm transition ${view==="dashboard" ? "bg-white text-blue-900 font-semibold" : "hover:bg-blue-700"}`}>Leads</button>
+        <button onClick={() => setView("privacy")} className={`px-3 py-1 rounded text-sm transition ${view==="privacy" ? "bg-white text-blue-900 font-semibold" : "hover:bg-blue-700"}`}>Privacidade</button>
+        <div className="ml-auto">
+          <button onClick={() => signOut(auth)} className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition">Logout</button>
         </div>
-        {view === "form" ? <ContactForm onServiceChange={setCurrentService} /> : view === "dashboard" ? <Dashboard /> : <PrivacyPolicy />}
       </div>
+
+      {/* Conteúdo principal */}
+      {view === "form" ? (
+        <div className="flex flex-1">
+          {/* Lado esquerdo — imagem dinâmica */}
+          <div className="hidden md:flex w-1/2 relative flex-col items-center justify-center" style={{backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center", transition: "background-image 0.5s ease"}}>
+            <div className="absolute inset-0 bg-blue-900/65" />
+            <div className="relative text-white text-center p-10">
+              <img src="/Logo_Ornelas_Protect_final3.png" className="w-32 mx-auto mb-6 rounded-xl shadow-lg" />
+              <h2 className="text-3xl font-bold mb-3">{info.title}</h2>
+              <p className="text-blue-100 text-lg mb-6">{info.subtitle}</p>
+              <div className="flex flex-wrap gap-2 justify-center">
+                {info.tags.map(tag => (
+                  <span key={tag} className="bg-white/20 text-white text-sm px-3 py-1 rounded-full border border-white/30">{tag}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+          {/* Lado direito — formulário */}
+          <div className="w-full md:w-1/2 bg-gray-50 flex items-start justify-center p-6 overflow-y-auto">
+            <ContactForm onServiceChange={setCurrentService} />
+          </div>
+        </div>
+      ) : view === "dashboard" ? (
+        <div className="flex-1 bg-gray-100 p-4 overflow-y-auto">
+          <Dashboard />
+        </div>
+      ) : (
+        <div className="flex-1 bg-gray-100 p-4 overflow-y-auto">
+          <PrivacyPolicy />
+        </div>
+      )}
     </div>
   );
 }
@@ -110,22 +164,21 @@ function ContactForm({ onServiceChange }) {
     await addDoc(collection(db, "leads"), { ...form, status: "novo", notes: "", date: new Date().toISOString() });
     alert("Pedido recebido. Vamos entrar em contacto brevemente.");
     setForm(emptyForm);
-    onServiceChange("");
+    onServiceChange("default");
   };
 
-  const sel = "w-full mb-2 p-2 border border-gray-300 rounded-lg bg-white";
-  const inp = "w-full mb-2 p-2 border border-gray-300 rounded-lg bg-white";
+  const sel = "w-full mb-2 p-2 border border-gray-300 rounded-lg bg-white text-sm";
+  const inp = "w-full mb-2 p-2 border border-gray-300 rounded-lg bg-white text-sm";
 
   return (
-    <form onSubmit={submit} className="max-w-md mx-auto bg-white/95 backdrop-blur p-6 rounded-2xl shadow-2xl">
-      <img src="/Logo_Ornelas_Protect_final3.png" className="w-28 mx-auto mb-4" />
+    <form onSubmit={submit} className="w-full max-w-md py-4">
+      <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">Pedido de Contacto</h2>
 
       <input placeholder="Nome" value={form.name} onChange={e => f("name", e.target.value)} className={inp} />
       <input placeholder="Email" value={form.email} onChange={e => f("email", e.target.value)} className={inp} />
       <input placeholder="Telefone" value={form.phone} onChange={e => f("phone", e.target.value)} className={inp} />
 
-      {/* SERVIÇO PRINCIPAL */}
-      <select value={form.service} onChange={e => { const s = e.target.value; setForm({...emptyForm, name: form.name, email: form.email, phone: form.phone, message: form.message, consent: form.consent, service: s}); onServiceChange(s); }} className={sel}>
+      <select value={form.service} onChange={e => { const s = e.target.value; setForm({...emptyForm, name: form.name, email: form.email, phone: form.phone, message: form.message, consent: form.consent, service: s}); onServiceChange(s || "default"); }} className={sel}>
         <option value="">Tipo de serviço</option>
         <option value="Seguros">Seguros</option>
         <option value="Mediação Imobiliária">Mediação Imobiliária</option>
@@ -133,7 +186,7 @@ function ContactForm({ onServiceChange }) {
         <option value="Eventos">Eventos</option>
       </select>
 
-      {/* ── SEGUROS ── */}
+      {/* SEGUROS */}
       {form.service === "Seguros" && (
         <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
           <option value="">Tipo de seguro</option>
@@ -149,7 +202,7 @@ function ContactForm({ onServiceChange }) {
         </select>
       )}
 
-      {/* ── MEDIAÇÃO IMOBILIÁRIA ── */}
+      {/* IMOBILIÁRIA */}
       {form.service === "Mediação Imobiliária" && (
         <>
           <select value={form.operacao} onChange={e => f("operacao", e.target.value)} className={sel}>
@@ -209,7 +262,7 @@ function ContactForm({ onServiceChange }) {
         </>
       )}
 
-      {/* ── MEDIAÇÃO AUTOMÓVEL ── */}
+      {/* AUTOMÓVEL */}
       {form.service === "Mediação Automóvel" && (
         <>
           <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
@@ -219,60 +272,30 @@ function ContactForm({ onServiceChange }) {
           </select>
           <select value={form.marca} onChange={e => f("marca", e.target.value)} className={sel}>
             <option value="">Marca</option>
-            <option value="Alfa Romeo">Alfa Romeo</option>
-            <option value="Audi">Audi</option>
-            <option value="BMW">BMW</option>
-            <option value="Chevrolet">Chevrolet</option>
-            <option value="Chrysler">Chrysler</option>
-            <option value="Citroën">Citroën</option>
-            <option value="Cupra">Cupra</option>
-            <option value="Dacia">Dacia</option>
-            <option value="DS">DS</option>
-            <option value="Ferrari">Ferrari</option>
-            <option value="Fiat">Fiat</option>
-            <option value="Ford">Ford</option>
-            <option value="Honda">Honda</option>
-            <option value="Hyundai">Hyundai</option>
-            <option value="Jaguar">Jaguar</option>
-            <option value="Jeep">Jeep</option>
-            <option value="Kia">Kia</option>
-            <option value="Lamborghini">Lamborghini</option>
-            <option value="Land Rover">Land Rover</option>
-            <option value="Lexus">Lexus</option>
-            <option value="Maserati">Maserati</option>
-            <option value="Mazda">Mazda</option>
-            <option value="Mercedes-Benz">Mercedes-Benz</option>
-            <option value="Mini">Mini</option>
-            <option value="Mitsubishi">Mitsubishi</option>
-            <option value="Nissan">Nissan</option>
-            <option value="Opel">Opel</option>
-            <option value="Peugeot">Peugeot</option>
-            <option value="Porsche">Porsche</option>
-            <option value="Renault">Renault</option>
-            <option value="Seat">Seat</option>
-            <option value="Skoda">Skoda</option>
-            <option value="Smart">Smart</option>
-            <option value="Subaru">Subaru</option>
-            <option value="Suzuki">Suzuki</option>
-            <option value="Tesla">Tesla</option>
-            <option value="Toyota">Toyota</option>
-            <option value="Volkswagen">Volkswagen</option>
-            <option value="Volvo">Volvo</option>
+            <option value="Alfa Romeo">Alfa Romeo</option><option value="Audi">Audi</option><option value="BMW">BMW</option>
+            <option value="Chevrolet">Chevrolet</option><option value="Chrysler">Chrysler</option><option value="Citroën">Citroën</option>
+            <option value="Cupra">Cupra</option><option value="Dacia">Dacia</option><option value="DS">DS</option>
+            <option value="Ferrari">Ferrari</option><option value="Fiat">Fiat</option><option value="Ford">Ford</option>
+            <option value="Honda">Honda</option><option value="Hyundai">Hyundai</option><option value="Jaguar">Jaguar</option>
+            <option value="Jeep">Jeep</option><option value="Kia">Kia</option><option value="Lamborghini">Lamborghini</option>
+            <option value="Land Rover">Land Rover</option><option value="Lexus">Lexus</option><option value="Maserati">Maserati</option>
+            <option value="Mazda">Mazda</option><option value="Mercedes-Benz">Mercedes-Benz</option><option value="Mini">Mini</option>
+            <option value="Mitsubishi">Mitsubishi</option><option value="Nissan">Nissan</option><option value="Opel">Opel</option>
+            <option value="Peugeot">Peugeot</option><option value="Porsche">Porsche</option><option value="Renault">Renault</option>
+            <option value="Seat">Seat</option><option value="Skoda">Skoda</option><option value="Smart">Smart</option>
+            <option value="Subaru">Subaru</option><option value="Suzuki">Suzuki</option><option value="Tesla">Tesla</option>
+            <option value="Toyota">Toyota</option><option value="Volkswagen">Volkswagen</option><option value="Volvo">Volvo</option>
             <option value="Outra">Outra</option>
           </select>
           <select value={form.combustivel} onChange={e => f("combustivel", e.target.value)} className={sel}>
             <option value="">Combustível</option>
-            <option value="Gasolina">Gasolina</option>
-            <option value="Diesel">Diesel</option>
-            <option value="Híbrido">Híbrido</option>
-            <option value="Híbrido Plug-in">Híbrido Plug-in</option>
-            <option value="Elétrico">Elétrico</option>
-            <option value="Outro">Outro</option>
+            <option value="Gasolina">Gasolina</option><option value="Diesel">Diesel</option>
+            <option value="Híbrido">Híbrido</option><option value="Híbrido Plug-in">Híbrido Plug-in</option>
+            <option value="Elétrico">Elétrico</option><option value="Outro">Outro</option>
           </select>
           <select value={form.ivaDedutivel} onChange={e => f("ivaDedutivel", e.target.value)} className={sel}>
             <option value="">IVA Dedutível?</option>
-            <option value="Sim">Sim</option>
-            <option value="Não">Não</option>
+            <option value="Sim">Sim</option><option value="Não">Não</option>
           </select>
           <select value={form.preco} onChange={e => f("preco", e.target.value)} className={sel}>
             <option value="">Intervalo de preço</option>
@@ -284,8 +307,7 @@ function ContactForm({ onServiceChange }) {
           </select>
           <select value={form.financiamento} onChange={e => f("financiamento", e.target.value)} className={sel}>
             <option value="">Precisa de financiamento?</option>
-            <option value="Sim">Sim</option>
-            <option value="Não">Não</option>
+            <option value="Sim">Sim</option><option value="Não">Não</option>
           </select>
           {form.financiamento === "Sim" && (
             <input placeholder="Valor de prestação desejado (€/mês)" value={form.prestacao} onChange={e => f("prestacao", e.target.value)} className={inp} />
@@ -302,7 +324,7 @@ function ContactForm({ onServiceChange }) {
         </>
       )}
 
-      {/* ── EVENTOS ── */}
+      {/* EVENTOS */}
       {form.service === "Eventos" && (
         <>
           <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
@@ -336,12 +358,12 @@ function ContactForm({ onServiceChange }) {
         </>
       )}
 
-      <textarea placeholder="Mensagem" value={form.message} onChange={e => f("message", e.target.value)} className={inp} />
-      <label className="text-sm flex items-start gap-2 mb-3">
+      <textarea placeholder="Mensagem" value={form.message} onChange={e => f("message", e.target.value)} className={inp} rows={3} />
+      <label className="text-sm flex items-start gap-2 mb-4 text-gray-600">
         <input type="checkbox" checked={form.consent} onChange={e => f("consent", e.target.checked)} className="mt-1" />
         <span>Autorizo o tratamento dos meus dados para contacto comercial</span>
       </label>
-      <button className="w-full bg-blue-700 text-white p-3 rounded-lg font-semibold hover:bg-blue-800 transition">Enviar</button>
+      <button className="w-full bg-blue-700 text-white p-3 rounded-lg font-semibold hover:bg-blue-800 transition">Enviar Pedido</button>
     </form>
   );
 }
@@ -362,43 +384,44 @@ function Dashboard() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="grid grid-cols-4 gap-2 mb-4">
-        <div className="bg-white/90 p-3 rounded-lg shadow text-center"><p className="text-sm text-gray-500">Total</p><p className="text-2xl font-bold">{stats.total}</p></div>
-        <div className="bg-yellow-100/90 p-3 rounded-lg shadow text-center"><p className="text-sm text-gray-500">Novos</p><p className="text-2xl font-bold text-yellow-700">{stats.novo}</p></div>
-        <div className="bg-blue-100/90 p-3 rounded-lg shadow text-center"><p className="text-sm text-gray-500">Contactados</p><p className="text-2xl font-bold text-blue-700">{stats.contactado}</p></div>
-        <div className="bg-green-100/90 p-3 rounded-lg shadow text-center"><p className="text-sm text-gray-500">Fechados</p><p className="text-2xl font-bold text-green-700">{stats.fechado}</p></div>
+      <div className="grid grid-cols-4 gap-3 mb-4">
+        <div className="bg-white p-3 rounded-xl shadow text-center"><p className="text-xs text-gray-500">Total</p><p className="text-2xl font-bold text-gray-800">{stats.total}</p></div>
+        <div className="bg-yellow-50 p-3 rounded-xl shadow text-center"><p className="text-xs text-gray-500">Novos</p><p className="text-2xl font-bold text-yellow-600">{stats.novo}</p></div>
+        <div className="bg-blue-50 p-3 rounded-xl shadow text-center"><p className="text-xs text-gray-500">Contactados</p><p className="text-2xl font-bold text-blue-600">{stats.contactado}</p></div>
+        <div className="bg-green-50 p-3 rounded-xl shadow text-center"><p className="text-xs text-gray-500">Fechados</p><p className="text-2xl font-bold text-green-600">{stats.fechado}</p></div>
       </div>
       {leads.map(l => (
-        <div key={l.id} className="bg-white/95 border p-4 mb-3 rounded-xl shadow">
+        <div key={l.id} className="bg-white border p-4 mb-3 rounded-xl shadow">
           <p className="text-lg font-bold text-gray-800">{l.name}</p>
-          <p className="text-gray-600">{l.email}</p>
-          <p className="text-gray-600">{l.phone}</p>
-          {l.service && <p className="text-sm mt-1">Serviço: <strong>{l.service}</strong></p>}
-          {l.subcategory && <p className="text-sm">Subcategoria: <strong>{l.subcategory}</strong></p>}
-          {l.operacao && <p className="text-sm">Operação: <strong>{l.operacao}</strong></p>}
-          {l.fracao && <p className="text-sm">Tipologia: <strong>{l.fracao}</strong></p>}
-          {l.zonaRegiao && <p className="text-sm">Zona: <strong>{l.zonaRegiao}</strong></p>}
-          {l.concelho && <p className="text-sm">Concelho: <strong>{l.concelho}</strong></p>}
-          {l.areaTerreno && <p className="text-sm">Área do terreno: <strong>{l.areaTerreno}</strong></p>}
-          {l.efeitoTerreno && <p className="text-sm">Efeito: <strong>{l.efeitoTerreno}</strong></p>}
-          {l.marca && <p className="text-sm">Marca: <strong>{l.marca}</strong></p>}
-          {l.combustivel && <p className="text-sm">Combustível: <strong>{l.combustivel}</strong></p>}
-          {l.ivaDedutivel && <p className="text-sm">IVA Dedutível: <strong>{l.ivaDedutivel}</strong></p>}
-          {l.preco && <p className="text-sm">Preço: <strong>{l.preco}</strong></p>}
-          {l.financiamento && <p className="text-sm">Financiamento: <strong>{l.financiamento}</strong></p>}
-          {l.prestacao && <p className="text-sm">Prestação: <strong>{l.prestacao}</strong></p>}
-          {l.kms && <p className="text-sm">Quilómetros: <strong>{l.kms}</strong></p>}
-          {l.eventoPessoas && <p className="text-sm">Nº Pessoas: <strong>{l.eventoPessoas}</strong></p>}
-          {l.eventoZona && <p className="text-sm">Zona evento: <strong>{l.eventoZona}</strong></p>}
-          {l.eventoValorPessoa && <p className="text-sm">Valor/pessoa: <strong>{l.eventoValorPessoa}</strong></p>}
-          {l.message && <p className="text-sm">Mensagem: {l.message}</p>}
-          <p className="text-sm mt-1">Status: <strong>{l.status}</strong></p>
-          <textarea placeholder="Notas" defaultValue={l.notes} onBlur={e=>updateNotes(l.id,e.target.value)} className="w-full border border-gray-300 mt-2 p-2 rounded-lg text-sm" />
+          <p className="text-gray-500 text-sm">{l.email} · {l.phone}</p>
+          <div className="mt-2 text-sm text-gray-700 grid grid-cols-2 gap-1">
+            {l.service && <p>Serviço: <strong>{l.service}</strong></p>}
+            {l.subcategory && <p>Subcategoria: <strong>{l.subcategory}</strong></p>}
+            {l.operacao && <p>Operação: <strong>{l.operacao}</strong></p>}
+            {l.fracao && <p>Tipologia: <strong>{l.fracao}</strong></p>}
+            {l.zonaRegiao && <p>Zona: <strong>{l.zonaRegiao}</strong></p>}
+            {l.concelho && <p>Concelho: <strong>{l.concelho}</strong></p>}
+            {l.areaTerreno && <p>Área: <strong>{l.areaTerreno}</strong></p>}
+            {l.efeitoTerreno && <p>Efeito: <strong>{l.efeitoTerreno}</strong></p>}
+            {l.marca && <p>Marca: <strong>{l.marca}</strong></p>}
+            {l.combustivel && <p>Combustível: <strong>{l.combustivel}</strong></p>}
+            {l.ivaDedutivel && <p>IVA Dedutível: <strong>{l.ivaDedutivel}</strong></p>}
+            {l.preco && <p>Preço: <strong>{l.preco}</strong></p>}
+            {l.financiamento && <p>Financiamento: <strong>{l.financiamento}</strong></p>}
+            {l.prestacao && <p>Prestação: <strong>{l.prestacao}</strong></p>}
+            {l.kms && <p>Kms: <strong>{l.kms}</strong></p>}
+            {l.eventoPessoas && <p>Pessoas: <strong>{l.eventoPessoas}</strong></p>}
+            {l.eventoZona && <p>Zona evento: <strong>{l.eventoZona}</strong></p>}
+            {l.eventoValorPessoa && <p>Valor/pessoa: <strong>{l.eventoValorPessoa}</strong></p>}
+          </div>
+          {l.message && <p className="text-sm text-gray-600 mt-1 italic">"{l.message}"</p>}
+          <p className="text-sm mt-2">Status: <strong className={l.status==='novo'?'text-yellow-600':l.status==='contactado'?'text-blue-600':'text-green-600'}>{l.status}</strong></p>
+          <textarea placeholder="Notas" defaultValue={l.notes} onBlur={e=>updateNotes(l.id,e.target.value)} className="w-full border border-gray-200 mt-2 p-2 rounded-lg text-sm bg-gray-50" />
           <div className="flex gap-2 mt-2 flex-wrap">
             <button onClick={()=>whatsapp(l.phone,l.name)} className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600 transition">WhatsApp</button>
-            <button onClick={()=>updateStatus(l.id,'contactado')} className="bg-yellow-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-yellow-600 transition">Contactado</button>
+            <button onClick={()=>updateStatus(l.id,'contactado')} className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-600 transition">Contactado</button>
             <button onClick={()=>updateStatus(l.id,'fechado')} className="bg-green-700 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-800 transition">Fechado</button>
-            <button onClick={()=>remove(l.id)} className="bg-red-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-700 transition">Eliminar</button>
+            <button onClick={()=>remove(l.id)} className="bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition">Eliminar</button>
           </div>
         </div>
       ))}
@@ -409,7 +432,7 @@ function Dashboard() {
 // PRIVACY POLICY COMPONENT
 function PrivacyPolicy() {
   return (
-    <div className="max-w-2xl mx-auto bg-white/95 p-6 rounded-2xl shadow-2xl mt-6">
+    <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow mt-6">
       <h2 className="font-bold text-xl mb-4 text-blue-800">Política de Privacidade</h2>
       <p className="mb-3 text-gray-700">Somos a Ornelas Protect e respeitamos a sua privacidade. Os dados recolhidos (nome, email, telefone, mensagem) são utilizados exclusivamente para contacto comercial.</p>
       <p className="mb-3 text-gray-700">Tem o direito de aceder, corrigir e eliminar os seus dados em qualquer momento. Para isso, contacte-nos através dos canais disponíveis.</p>
