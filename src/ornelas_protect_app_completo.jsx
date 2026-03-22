@@ -17,6 +17,26 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+// CONCELHOS POR ZONA
+const concelhosPorZona = {
+  "Continente": [
+    "Abrantes","Águeda","Aguiar da Beira","Alandroal","Albergaria-a-Velha","Albufeira","Alcácer do Sal","Alcanena","Alcobaça","Alcochete","Alcoutim","Alenquer","Alfândega da Fé","Algarve","Alijó","Aljezur","Aljustrel","Almada","Almeida","Almeirim","Almodôvar","Alpiarça","Alter do Chão","Alvaiázere","Alvito","Amadora","Amarante","Amares","Anadia","Ansião","Arcos de Valdevez","Arganil","Armamar","Arouca","Arraiolos","Arronches","Arruda dos Vinhos","Aveiro","Avis","Azambuja",
+    "Baião","Barcelos","Barrancos","Barreiro","Beja","Belmonte","Benavente","Bombarral","Borba","Braga","Bragança","Cabeceiras de Basto","Cadaval","Caldas da Rainha","Caminha","Cantanhede","Carrazeda de Ansiães","Carregal do Sal","Cartaxo","Cascais","Castelo Branco","Castelo de Paiva","Castelo de Vide","Castro Daire","Castro Marim","Castro Verde","Celorico da Beira","Celorico de Basto","Chaves","Cinfães","Coimbra","Condeixa-a-Nova","Constância","Coruche","Covilhã","Crato","Cuba",
+    "Elvas","Entroncamento","Espinho","Esposende","Estarreja","Estremoz","Évora","Fafe","Faro","Felgueiras","Ferreira do Alentejo","Ferreira do Zêzere","Figueira da Foz","Figueira de Castelo Rodrigo","Figueiró dos Vinhos","Fornos de Algodres","Freixo de Espada à Cinta","Fronteira","Fundão",
+    "Gavião","Góis","Gondomar","Gouveia","Grândola","Guarda","Guimarães","Idanha-a-Nova","Ílhavo","Lagos","Lamego","Leiria","Lisboa","Loulé","Loures","Lousã","Lousada","Mação","Macedo de Cavaleiros","Mafra","Maia","Mangualde","Manteigas","Marco de Canaveses","Marinha Grande","Marvão","Matosinhos","Mealhada","Meda","Melgaço","Mesão Frio","Miranda do Corvo","Miranda do Douro","Mirandela","Mogadouro","Moimenta da Beira","Moita","Monção","Monchique","Mondim de Basto","Monforte","Montalegre","Montemor-o-Novo","Montemor-o-Velho","Montijo","Mora","Mortágua","Moura","Mourão","Murça","Murtosa",
+    "Nazaré","Nelas","Nisa","Óbidos","Odemira","Odivelas","Oeiras","Oleiros","Olhão","Oliveira de Azeméis","Oliveira de Frades","Oliveira do Bairro","Oliveira do Hospital","Ourém","Ourique","Ovar",
+    "Paços de Ferreira","Palmela","Pampilhosa da Serra","Paredes","Paredes de Coura","Pedrógão Grande","Penacova","Penafiel","Penalva do Castelo","Penamacor","Penedono","Penela","Peniche","Peso da Régua","Pinhel","Pombal","Ponte da Barca","Ponte de Lima","Ponte de Sor","Portalegre","Portel","Portimão","Porto","Porto de Mós","Póvoa de Lanhoso","Póvoa de Varzim","Proença-a-Nova",
+    "Redondo","Reguengos de Monsaraz","Resende","Ribeira de Pena","Rio Maior","Sabrosa","Sabugal","Salvaterra de Magos","Santa Comba Dão","Santa Maria da Feira","Santa Marta de Penaguião","Santarém","Santiago do Cacém","Santo Tirso","São Brás de Alportel","São João da Madeira","São João da Pesqueira","São Pedro do Sul","São Roque do Pico","São Vicente da Beira","Sardoal","Sátão","Seia","Seixal","Serpa","Sernancelhe","Sesimbra","Setúbal","Sever do Vouga","Silves","Sines","Sintra","Sobral de Monte Agraço","Soure","Sousel",
+    "Tábua","Tabuaço","Tarouca","Tavira","Terras de Bouro","Tomar","Tondela","Torre de Moncorvo","Torres Novas","Torres Vedras","Trancoso","Trofa","Vagos","Vale de Cambra","Valença","Valongo","Valpaços","Vendas Novas","Viana do Alentejo","Viana do Castelo","Vidigueira","Vieira do Minho","Vila de Rei","Vila do Bispo","Vila do Conde","Vila Flor","Vila Franca de Xira","Vila Nova da Barquinha","Vila Nova de Cerveira","Vila Nova de Famalicão","Vila Nova de Foz Côa","Vila Nova de Gaia","Vila Nova de Paiva","Vila Nova de Poiares","Vila Pouca de Aguiar","Vila Real","Vila Real de Santo António","Vila Velha de Ródão","Vila Verde","Vila Viçosa","Vimioso","Vinhais","Viseu","Vizela"
+  ],
+  "Madeira": [
+    "Calheta","Câmara de Lobos","Funchal","Machico","Ponta do Sol","Porto Moniz","Porto Santo","Ribeira Brava","Santa Cruz","Santana","São Vicente"
+  ],
+  "Açores": [
+    "Angra do Heroísmo","Calheta (São Jorge)","Corvo","Horta","Lagoa (São Miguel)","Lajes das Flores","Lajes do Pico","Madalena","Nordeste","Ponta Delgada","Povoação","Praia da Vitória","Ribeira Grande","Santa Cruz da Graciosa","Santa Cruz das Flores","São Roque do Pico","Velas","Vila do Porto","Vila Franca do Campo"
+  ]
+};
+
 // APP PRINCIPAL
 export default function OrnelasProtectApp() {
   const [user, setUser] = useState(null);
@@ -66,8 +86,9 @@ function ContactForm() {
   const emptyForm = {
     name: "", email: "", phone: "", service: "",
     subcategory: "", operacao: "", fracao: "",
+    zonaRegiao: "", concelho: "",
     areaTerreno: "", efeitoTerreno: "",
-    combustivel: "", ivaDedutivel: "", preco: "", financiamento: "", prestacao: "", kms: "",
+    marca: "", combustivel: "", ivaDedutivel: "", preco: "", financiamento: "", prestacao: "", kms: "",
     eventoPessoas: "", eventoZona: "", eventoValorPessoa: "",
     message: "", consent: false
   };
@@ -160,6 +181,27 @@ function ContactForm() {
               </select>
             </>
           )}
+
+          {/* ZONA DE INTERESSE */}
+          {form.subcategory && (
+            <>
+              <select value={form.zonaRegiao} onChange={e => { f("zonaRegiao", e.target.value); f("concelho", ""); }} className={sel}>
+                <option value="">Zona de interesse</option>
+                <option value="Continente">Continente</option>
+                <option value="Madeira">Madeira</option>
+                <option value="Açores">Açores</option>
+              </select>
+
+              {form.zonaRegiao && (
+                <select value={form.concelho} onChange={e => f("concelho", e.target.value)} className={sel}>
+                  <option value="">Concelho</option>
+                  {concelhosPorZona[form.zonaRegiao].map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              )}
+            </>
+          )}
         </>
       )}
 
@@ -170,6 +212,50 @@ function ContactForm() {
             <option value="">Novo ou Usado?</option>
             <option value="Novo">Novo</option>
             <option value="Usado">Usado</option>
+          </select>
+
+          <select value={form.marca} onChange={e => f("marca", e.target.value)} className={sel}>
+            <option value="">Marca</option>
+            <option value="Alfa Romeo">Alfa Romeo</option>
+            <option value="Audi">Audi</option>
+            <option value="BMW">BMW</option>
+            <option value="Chevrolet">Chevrolet</option>
+            <option value="Chrysler">Chrysler</option>
+            <option value="Citroën">Citroën</option>
+            <option value="Cupra">Cupra</option>
+            <option value="Dacia">Dacia</option>
+            <option value="DS">DS</option>
+            <option value="Ferrari">Ferrari</option>
+            <option value="Fiat">Fiat</option>
+            <option value="Ford">Ford</option>
+            <option value="Honda">Honda</option>
+            <option value="Hyundai">Hyundai</option>
+            <option value="Jaguar">Jaguar</option>
+            <option value="Jeep">Jeep</option>
+            <option value="Kia">Kia</option>
+            <option value="Lamborghini">Lamborghini</option>
+            <option value="Land Rover">Land Rover</option>
+            <option value="Lexus">Lexus</option>
+            <option value="Maserati">Maserati</option>
+            <option value="Mazda">Mazda</option>
+            <option value="Mercedes-Benz">Mercedes-Benz</option>
+            <option value="Mini">Mini</option>
+            <option value="Mitsubishi">Mitsubishi</option>
+            <option value="Nissan">Nissan</option>
+            <option value="Opel">Opel</option>
+            <option value="Peugeot">Peugeot</option>
+            <option value="Porsche">Porsche</option>
+            <option value="Renault">Renault</option>
+            <option value="Seat">Seat</option>
+            <option value="Skoda">Skoda</option>
+            <option value="Smart">Smart</option>
+            <option value="Subaru">Subaru</option>
+            <option value="Suzuki">Suzuki</option>
+            <option value="Tesla">Tesla</option>
+            <option value="Toyota">Toyota</option>
+            <option value="Volkswagen">Volkswagen</option>
+            <option value="Volvo">Volvo</option>
+            <option value="Outra">Outra</option>
           </select>
 
           <select value={form.combustivel} onChange={e => f("combustivel", e.target.value)} className={sel}>
@@ -183,7 +269,7 @@ function ContactForm() {
           </select>
 
           <select value={form.ivaDedutivel} onChange={e => f("ivaDedutivel", e.target.value)} className={sel}>
-            <option value="">IVA dedutível?</option>
+            <option value="">IVA Dedutível?</option>
             <option value="Sim">Sim</option>
             <option value="Não">Não</option>
           </select>
@@ -229,7 +315,6 @@ function ContactForm() {
             <option value="Evento de Empresa">Evento de Empresa</option>
             <option value="Outro">Outro</option>
           </select>
-
           {(form.subcategory === "Casamento" || form.subcategory === "Batizado" || form.subcategory === "Evento de Empresa") && (
             <>
               <select value={form.eventoPessoas} onChange={e => f("eventoPessoas", e.target.value)} className={sel}>
@@ -240,9 +325,7 @@ function ContactForm() {
                 <option value="200 - 500 pessoas">200 - 500 pessoas</option>
                 <option value="Mais de 500 pessoas">Mais de 500 pessoas</option>
               </select>
-
               <input placeholder="Zona de interesse" value={form.eventoZona} onChange={e => f("eventoZona", e.target.value)} className={inp} />
-
               <select value={form.eventoValorPessoa} onChange={e => f("eventoValorPessoa", e.target.value)} className={sel}>
                 <option value="">Valor por pessoa disponível</option>
                 <option value="Até 25€/pessoa">Até 25€/pessoa</option>
@@ -268,19 +351,15 @@ function ContactForm() {
 // DASHBOARD COMPONENT
 function Dashboard() {
   const [leads, setLeads] = useState([]);
-
   const load = async () => {
     const data = await getDocs(collection(db, "leads"));
     setLeads(data.docs.map(d => ({ id: d.id, ...d.data() })));
   };
-
   useEffect(() => { load(); }, []);
-
   const remove = async (id) => { await deleteDoc(doc(db, "leads", id)); load(); };
   const updateStatus = async (id, status) => { await updateDoc(doc(db, "leads", id), { status }); load(); };
   const updateNotes = async (id, notes) => { await updateDoc(doc(db, "leads", id), { notes }); };
   const whatsapp = (phone, name) => { const msg = encodeURIComponent(`Olá ${name}, recebi o seu pedido de contacto. Em que posso ajudar?`); window.open(`https://wa.me/351${phone}?text=${msg}`); };
-
   const stats = { total: leads.length, novo: leads.filter(l=>l.status==='novo').length, contactado: leads.filter(l=>l.status==='contactado').length, fechado: leads.filter(l=>l.status==='fechado').length };
 
   return (
@@ -300,16 +379,19 @@ function Dashboard() {
           {l.subcategory && <p>Subcategoria: <strong>{l.subcategory}</strong></p>}
           {l.operacao && <p>Operação: <strong>{l.operacao}</strong></p>}
           {l.fracao && <p>Tipologia: <strong>{l.fracao}</strong></p>}
+          {l.zonaRegiao && <p>Zona: <strong>{l.zonaRegiao}</strong></p>}
+          {l.concelho && <p>Concelho: <strong>{l.concelho}</strong></p>}
           {l.areaTerreno && <p>Área do terreno: <strong>{l.areaTerreno}</strong></p>}
           {l.efeitoTerreno && <p>Efeito: <strong>{l.efeitoTerreno}</strong></p>}
+          {l.marca && <p>Marca: <strong>{l.marca}</strong></p>}
           {l.combustivel && <p>Combustível: <strong>{l.combustivel}</strong></p>}
-          {l.ivaDedutivel && <p>IVA dedutível: <strong>{l.ivaDedutivel}</strong></p>}
+          {l.ivaDedutivel && <p>IVA Dedutível: <strong>{l.ivaDedutivel}</strong></p>}
           {l.preco && <p>Preço: <strong>{l.preco}</strong></p>}
           {l.financiamento && <p>Financiamento: <strong>{l.financiamento}</strong></p>}
           {l.prestacao && <p>Prestação: <strong>{l.prestacao}</strong></p>}
           {l.kms && <p>Quilómetros: <strong>{l.kms}</strong></p>}
           {l.eventoPessoas && <p>Nº Pessoas: <strong>{l.eventoPessoas}</strong></p>}
-          {l.eventoZona && <p>Zona: <strong>{l.eventoZona}</strong></p>}
+          {l.eventoZona && <p>Zona evento: <strong>{l.eventoZona}</strong></p>}
           {l.eventoValorPessoa && <p>Valor/pessoa: <strong>{l.eventoValorPessoa}</strong></p>}
           {l.message && <p>Mensagem: {l.message}</p>}
           <p>Status: {l.status}</p>
