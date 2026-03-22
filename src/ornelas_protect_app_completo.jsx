@@ -63,9 +63,15 @@ function MainApp() {
 
 // CONTACT FORM COMPONENT
 function ContactForm() {
-  const emptyForm = { name: "", email: "", phone: "", service: "", subcategory: "", tipologia: "", operacao: "", preco: "", financiamento: "", prestacao: "", kms: "", message: "", consent: false };
+  const emptyForm = {
+    name: "", email: "", phone: "", service: "",
+    subcategory: "", operacao: "", fracao: "",
+    areaTerreno: "", efeitoTerreno: "",
+    combustivel: "", ivaDeducivel: "", preco: "", financiamento: "", prestacao: "", kms: "",
+    eventoPessoas: "", eventoZona: "", eventoValorPessoa: "",
+    message: "", consent: false
+  };
   const [form, setForm] = useState(emptyForm);
-
   const f = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
 
   const submit = async (e) => {
@@ -76,16 +82,19 @@ function ContactForm() {
     setForm(emptyForm);
   };
 
+  const sel = "w-full mb-2 p-2 border rounded";
+  const inp = "w-full mb-2 p-2 border rounded";
+
   return (
     <form onSubmit={submit} className="max-w-md mx-auto bg-white p-6 rounded-xl shadow">
       <img src="/Logo_Ornelas_Protect_final3.png" className="w-28 mx-auto mb-4" />
 
-      <input placeholder="Nome" value={form.name} onChange={e => f("name", e.target.value)} className="w-full mb-2 p-2 border rounded" />
-      <input placeholder="Email" value={form.email} onChange={e => f("email", e.target.value)} className="w-full mb-2 p-2 border rounded" />
-      <input placeholder="Telefone" value={form.phone} onChange={e => f("phone", e.target.value)} className="w-full mb-2 p-2 border rounded" />
+      <input placeholder="Nome" value={form.name} onChange={e => f("name", e.target.value)} className={inp} />
+      <input placeholder="Email" value={form.email} onChange={e => f("email", e.target.value)} className={inp} />
+      <input placeholder="Telefone" value={form.phone} onChange={e => f("phone", e.target.value)} className={inp} />
 
       {/* SERVIÇO PRINCIPAL */}
-      <select value={form.service} onChange={e => setForm({...emptyForm, name: form.name, email: form.email, phone: form.phone, message: form.message, consent: form.consent, service: e.target.value})} className="w-full mb-2 p-2 border rounded">
+      <select value={form.service} onChange={e => setForm({...emptyForm, name: form.name, email: form.email, phone: form.phone, message: form.message, consent: form.consent, service: e.target.value})} className={sel}>
         <option value="">Tipo de serviço</option>
         <option value="Seguros">Seguros</option>
         <option value="Mediação Imobiliária">Mediação Imobiliária</option>
@@ -93,9 +102,9 @@ function ContactForm() {
         <option value="Eventos">Eventos</option>
       </select>
 
-      {/* SEGUROS */}
+      {/* ── SEGUROS ── */}
       {form.service === "Seguros" && (
-        <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className="w-full mb-2 p-2 border rounded">
+        <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
           <option value="">Tipo de seguro</option>
           <option value="Vida">Vida</option>
           <option value="Auto">Auto</option>
@@ -109,15 +118,16 @@ function ContactForm() {
         </select>
       )}
 
-      {/* MEDIAÇÃO IMOBILIÁRIA */}
+      {/* ── MEDIAÇÃO IMOBILIÁRIA ── */}
       {form.service === "Mediação Imobiliária" && (
         <>
-          <select value={form.operacao} onChange={e => f("operacao", e.target.value)} className="w-full mb-2 p-2 border rounded">
+          <select value={form.operacao} onChange={e => f("operacao", e.target.value)} className={sel}>
             <option value="">Compra ou Venda?</option>
             <option value="Compra">Compra</option>
             <option value="Venda">Venda</option>
           </select>
-          <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className="w-full mb-2 p-2 border rounded">
+
+          <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
             <option value="">Tipo de imóvel</option>
             <option value="Apartamento">Apartamento</option>
             <option value="Casa">Casa</option>
@@ -125,18 +135,60 @@ function ContactForm() {
             <option value="Terreno">Terreno</option>
             <option value="Outro">Outro</option>
           </select>
+
+          {(form.subcategory === "Apartamento" || form.subcategory === "Casa") && (
+            <select value={form.fracao} onChange={e => f("fracao", e.target.value)} className={sel}>
+              <option value="">Tipologia</option>
+              <option value="T0">T0</option>
+              <option value="T1">T1</option>
+              <option value="T2">T2</option>
+              <option value="T3">T3</option>
+              <option value="T4">T4</option>
+              <option value="T4+">T4+</option>
+            </select>
+          )}
+
+          {form.subcategory === "Terreno" && (
+            <>
+              <input placeholder="Área pretendida (m²)" value={form.areaTerreno} onChange={e => f("areaTerreno", e.target.value)} className={inp} />
+              <select value={form.efeitoTerreno} onChange={e => f("efeitoTerreno", e.target.value)} className={sel}>
+                <option value="">Efeito do terreno</option>
+                <option value="Construção Habitacional">Construção Habitacional</option>
+                <option value="Armazéns">Armazéns</option>
+                <option value="Empresarial">Empresarial</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </>
+          )}
         </>
       )}
 
-      {/* MEDIAÇÃO AUTOMÓVEL */}
+      {/* ── MEDIAÇÃO AUTOMÓVEL ── */}
       {form.service === "Mediação Automóvel" && (
         <>
-          <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className="w-full mb-2 p-2 border rounded">
+          <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
             <option value="">Novo ou Usado?</option>
             <option value="Novo">Novo</option>
             <option value="Usado">Usado</option>
           </select>
-          <select value={form.preco} onChange={e => f("preco", e.target.value)} className="w-full mb-2 p-2 border rounded">
+
+          <select value={form.combustivel} onChange={e => f("combustivel", e.target.value)} className={sel}>
+            <option value="">Combustível</option>
+            <option value="Gasolina">Gasolina</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Híbrido">Híbrido</option>
+            <option value="Híbrido Plug-in">Híbrido Plug-in</option>
+            <option value="Elétrico">Elétrico</option>
+            <option value="Outro">Outro</option>
+          </select>
+
+          <select value={form.ivaDeducivel} onChange={e => f("ivaDeducivel", e.target.value)} className={sel}>
+            <option value="">IVA dedutível?</option>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+          </select>
+
+          <select value={form.preco} onChange={e => f("preco", e.target.value)} className={sel}>
             <option value="">Intervalo de preço</option>
             <option value="Até 10.000€">Até 10.000€</option>
             <option value="10.000€ - 20.000€">10.000€ - 20.000€</option>
@@ -144,16 +196,19 @@ function ContactForm() {
             <option value="35.000€ - 50.000€">35.000€ - 50.000€</option>
             <option value="Mais de 50.000€">Mais de 50.000€</option>
           </select>
-          <select value={form.financiamento} onChange={e => f("financiamento", e.target.value)} className="w-full mb-2 p-2 border rounded">
+
+          <select value={form.financiamento} onChange={e => f("financiamento", e.target.value)} className={sel}>
             <option value="">Precisa de financiamento?</option>
             <option value="Sim">Sim</option>
             <option value="Não">Não</option>
           </select>
+
           {form.financiamento === "Sim" && (
-            <input placeholder="Valor de prestação desejado (€/mês)" value={form.prestacao} onChange={e => f("prestacao", e.target.value)} className="w-full mb-2 p-2 border rounded" />
+            <input placeholder="Valor de prestação desejado (€/mês)" value={form.prestacao} onChange={e => f("prestacao", e.target.value)} className={inp} />
           )}
+
           {form.subcategory === "Usado" && (
-            <select value={form.kms} onChange={e => f("kms", e.target.value)} className="w-full mb-2 p-2 border rounded">
+            <select value={form.kms} onChange={e => f("kms", e.target.value)} className={sel}>
               <option value="">Máximo de quilómetros</option>
               <option value="Até 50.000 km">Até 50.000 km</option>
               <option value="Até 100.000 km">Até 100.000 km</option>
@@ -164,18 +219,44 @@ function ContactForm() {
         </>
       )}
 
-      {/* EVENTOS */}
+      {/* ── EVENTOS ── */}
       {form.service === "Eventos" && (
-        <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className="w-full mb-2 p-2 border rounded">
-          <option value="">Tipo de evento</option>
-          <option value="Casamento">Casamento</option>
-          <option value="Batizado">Batizado</option>
-          <option value="Evento de Empresa">Evento de Empresa</option>
-          <option value="Outro">Outro</option>
-        </select>
+        <>
+          <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
+            <option value="">Tipo de evento</option>
+            <option value="Casamento">Casamento</option>
+            <option value="Batizado">Batizado</option>
+            <option value="Evento de Empresa">Evento de Empresa</option>
+            <option value="Outro">Outro</option>
+          </select>
+
+          {(form.subcategory === "Casamento" || form.subcategory === "Batizado" || form.subcategory === "Evento de Empresa") && (
+            <>
+              <select value={form.eventoPessoas} onChange={e => f("eventoPessoas", e.target.value)} className={sel}>
+                <option value="">Número de pessoas</option>
+                <option value="Até 50 pessoas">Até 50 pessoas</option>
+                <option value="50 - 100 pessoas">50 - 100 pessoas</option>
+                <option value="100 - 200 pessoas">100 - 200 pessoas</option>
+                <option value="200 - 500 pessoas">200 - 500 pessoas</option>
+                <option value="Mais de 500 pessoas">Mais de 500 pessoas</option>
+              </select>
+
+              <input placeholder="Zona de interesse" value={form.eventoZona} onChange={e => f("eventoZona", e.target.value)} className={inp} />
+
+              <select value={form.eventoValorPessoa} onChange={e => f("eventoValorPessoa", e.target.value)} className={sel}>
+                <option value="">Valor por pessoa disponível</option>
+                <option value="Até 25€/pessoa">Até 25€/pessoa</option>
+                <option value="25€ - 50€/pessoa">25€ - 50€/pessoa</option>
+                <option value="50€ - 100€/pessoa">50€ - 100€/pessoa</option>
+                <option value="100€ - 200€/pessoa">100€ - 200€/pessoa</option>
+                <option value="Mais de 200€/pessoa">Mais de 200€/pessoa</option>
+              </select>
+            </>
+          )}
+        </>
       )}
 
-      <textarea placeholder="Mensagem" value={form.message} onChange={e => f("message", e.target.value)} className="w-full mb-2 p-2 border rounded" />
+      <textarea placeholder="Mensagem" value={form.message} onChange={e => f("message", e.target.value)} className={inp} />
       <label className="text-sm">
         <input type="checkbox" checked={form.consent} onChange={e => f("consent", e.target.checked)} /> Autorizo o tratamento dos meus dados para contacto comercial
       </label>
@@ -218,14 +299,22 @@ function Dashboard() {
           {l.service && <p>Serviço: <strong>{l.service}</strong></p>}
           {l.subcategory && <p>Subcategoria: <strong>{l.subcategory}</strong></p>}
           {l.operacao && <p>Operação: <strong>{l.operacao}</strong></p>}
+          {l.fracao && <p>Tipologia: <strong>{l.fracao}</strong></p>}
+          {l.areaTerreno && <p>Área do terreno: <strong>{l.areaTerreno}</strong></p>}
+          {l.efeitoTerreno && <p>Efeito: <strong>{l.efeitoTerreno}</strong></p>}
+          {l.combustivel && <p>Combustível: <strong>{l.combustivel}</strong></p>}
+          {l.ivaDeducivel && <p>IVA dedutível: <strong>{l.ivaDeducivel}</strong></p>}
           {l.preco && <p>Preço: <strong>{l.preco}</strong></p>}
           {l.financiamento && <p>Financiamento: <strong>{l.financiamento}</strong></p>}
           {l.prestacao && <p>Prestação: <strong>{l.prestacao}</strong></p>}
           {l.kms && <p>Quilómetros: <strong>{l.kms}</strong></p>}
+          {l.eventoPessoas && <p>Nº Pessoas: <strong>{l.eventoPessoas}</strong></p>}
+          {l.eventoZona && <p>Zona: <strong>{l.eventoZona}</strong></p>}
+          {l.eventoValorPessoa && <p>Valor/pessoa: <strong>{l.eventoValorPessoa}</strong></p>}
           {l.message && <p>Mensagem: {l.message}</p>}
           <p>Status: {l.status}</p>
           <textarea placeholder="Notas" defaultValue={l.notes} onBlur={e=>updateNotes(l.id,e.target.value)} className="w-full border mt-2 p-1" />
-          <div className="flex gap-2 mt-2">
+          <div className="flex gap-2 mt-2 flex-wrap">
             <button onClick={()=>whatsapp(l.phone,l.name)} className="bg-green-500 text-white px-2 py-1 rounded">WhatsApp</button>
             <button onClick={()=>updateStatus(l.id,'contactado')} className="bg-yellow-500 px-2 py-1 rounded">Contactado</button>
             <button onClick={()=>updateStatus(l.id,'fechado')} className="bg-green-700 text-white px-2 py-1 rounded">Fechado</button>
