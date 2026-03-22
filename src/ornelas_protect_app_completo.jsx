@@ -67,7 +67,7 @@ function ContactForm() {
     name: "", email: "", phone: "", service: "",
     subcategory: "", operacao: "", fracao: "",
     areaTerreno: "", efeitoTerreno: "",
-    combustivel: "", ivaDeducivel: "", preco: "", financiamento: "", prestacao: "", kms: "",
+    combustivel: "", ivaDedutivel: "", preco: "", financiamento: "", prestacao: "", kms: "",
     eventoPessoas: "", eventoZona: "", eventoValorPessoa: "",
     message: "", consent: false
   };
@@ -182,7 +182,7 @@ function ContactForm() {
             <option value="Outro">Outro</option>
           </select>
 
-          <select value={form.ivaDeducivel} onChange={e => f("ivaDeducivel", e.target.value)} className={sel}>
+          <select value={form.ivaDedutivel} onChange={e => f("ivaDedutivel", e.target.value)} className={sel}>
             <option value="">IVA dedutível?</option>
             <option value="Sim">Sim</option>
             <option value="Não">Não</option>
@@ -303,7 +303,7 @@ function Dashboard() {
           {l.areaTerreno && <p>Área do terreno: <strong>{l.areaTerreno}</strong></p>}
           {l.efeitoTerreno && <p>Efeito: <strong>{l.efeitoTerreno}</strong></p>}
           {l.combustivel && <p>Combustível: <strong>{l.combustivel}</strong></p>}
-          {l.ivaDeducivel && <p>IVA dedutível: <strong>{l.ivaDeducivel}</strong></p>}
+          {l.ivaDedutivel && <p>IVA dedutível: <strong>{l.ivaDedutivel}</strong></p>}
           {l.preco && <p>Preço: <strong>{l.preco}</strong></p>}
           {l.financiamento && <p>Financiamento: <strong>{l.financiamento}</strong></p>}
           {l.prestacao && <p>Prestação: <strong>{l.prestacao}</strong></p>}
