@@ -177,6 +177,8 @@ function MainApp({ user, view, setView, currentService, setCurrentService }) {
     }
   };
 
+  // Não passa o serviço ao formulário via tag — só muda o painel esquerdo
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
@@ -236,12 +238,7 @@ function ContactForm({ onServiceChange, selectedService }) {
   const [form, setForm] = useState(emptyForm);
   const f = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
 
-  // Sincroniza serviço quando vem de tag clicável
-  useEffect(() => {
-    if (selectedService && selectedService !== "default" && selectedService !== form.service) {
-      setForm(prev => ({ ...emptyForm, name: prev.name, email: prev.email, phone: prev.phone, message: prev.message, consent: prev.consent, service: selectedService }));
-    }
-  }, [selectedService]);
+  // Sincroniza serviço quando vem de tag clicável — desativado (tags só fazem scroll)
 
   const submit = async (e) => {
     e.preventDefault();
