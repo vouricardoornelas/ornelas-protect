@@ -115,6 +115,41 @@ function Login({ onBack }) {
   );
 }
 
+// NAVBAR COMPONENT
+function NavBar({ view, setView, user }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="bg-blue-900 text-white px-4 py-2 flex items-center shadow relative">
+      {/* Logo clicável */}
+      <button onClick={() => setOpen(!open)} className="flex items-center gap-2 focus:outline-none">
+        <img src="/Logo_Ornelas_Protect_final3.png" className="w-10 h-10 rounded-lg shadow" />
+      </button>
+
+      {/* Menu dropdown */}
+      {open && (
+        <div className="absolute top-14 left-2 bg-white text-gray-800 rounded-xl shadow-2xl z-50 min-w-48 overflow-hidden">
+          <button onClick={() => { setView("form"); setOpen(false); }} className={`w-full text-left px-4 py-3 text-sm hover:bg-blue-50 transition border-b border-gray-100 ${view==="form" ? "font-semibold text-blue-700" : ""}`}>
+            📋 Formulário
+          </button>
+          <button onClick={() => { setView("dashboard"); setOpen(false); }} className={`w-full text-left px-4 py-3 text-sm hover:bg-blue-50 transition border-b border-gray-100 ${view==="dashboard" ? "font-semibold text-blue-700" : ""}`}>
+            📊 Leads {!user && "🔒"}
+          </button>
+          <button onClick={() => { setView("privacy"); setOpen(false); }} className={`w-full text-left px-4 py-3 text-sm hover:bg-blue-50 transition border-b border-gray-100 ${view==="privacy" ? "font-semibold text-blue-700" : ""}`}>
+            🔏 Política de Privacidade
+          </button>
+          {user
+            ? <button onClick={() => { signOut(auth); setOpen(false); }} className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition">🚪 Logout</button>
+            : <button onClick={() => { setView("dashboard"); setOpen(false); }} className="w-full text-left px-4 py-3 text-sm text-blue-700 font-semibold hover:bg-blue-50 transition">🔑 Login</button>
+          }
+        </div>
+      )}
+
+      {/* Fechar menu ao clicar fora */}
+      {open && <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />}
+    </div>
+  );
+}
+
 // MAIN APP COMPONENT
 function MainApp({ user, view, setView, currentService, setCurrentService }) {
   const bg = bgImages[currentService] || bgImages.default;
@@ -123,18 +158,7 @@ function MainApp({ user, view, setView, currentService, setCurrentService }) {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
-      <div className="bg-blue-900 text-white px-4 py-2 flex gap-2 items-center shadow">
-        <img src="/Logo_Ornelas_Protect_final3.png" className="w-8 h-8 rounded mr-2" />
-        <button onClick={() => setView("form")} className={`px-3 py-1 rounded text-sm transition ${view==="form" ? "bg-white text-blue-900 font-semibold" : "hover:bg-blue-700"}`}>Formulário</button>
-        <button onClick={() => setView("dashboard")} className={`px-3 py-1 rounded text-sm transition ${view==="dashboard" ? "bg-white text-blue-900 font-semibold" : "hover:bg-blue-700"}`}>Leads 🔒</button>
-        <button onClick={() => { setView("privacy"); }} className={`px-3 py-1 rounded text-sm transition ${view==="privacy" ? "bg-white text-blue-900 font-semibold" : "hover:bg-blue-700"}`}>Privacidade</button>
-        <div className="ml-auto">
-          {user
-            ? <button onClick={() => signOut(auth)} className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 transition">Logout</button>
-            : <button onClick={() => setView("dashboard")} className="bg-white text-blue-900 px-3 py-1 rounded text-sm font-semibold hover:bg-blue-100 transition">Login</button>
-          }
-        </div>
-      </div>
+      <NavBar view={view} setView={setView} user={user} />
 
       {/* Conteúdo */}
       {view === "form" ? (
@@ -362,6 +386,12 @@ function ContactForm({ onServiceChange }) {
         <span>Autorizo o tratamento dos meus dados para contacto comercial</span>
       </label>
       <button className="w-full bg-blue-700 text-white p-3 rounded-lg font-semibold hover:bg-blue-800 transition">Enviar Pedido</button>
+
+      <div className="mt-6 text-center text-sm text-gray-500 border-t pt-4">
+        <p className="mb-2">Caso prefira, pode entrar em contacto diretamente:</p>
+        <a href="tel:+351913106033" className="block text-blue-700 font-semibold hover:underline">📞 91 310 60 33</a>
+        <a href="https://wa.me/351913106033" target="_blank" rel="noreferrer" className="block text-green-600 font-semibold hover:underline mt-1">💬 WhatsApp 91 310 60 33</a>
+      </div>
     </form>
   );
 }
