@@ -150,14 +150,38 @@ function NavBar({ view, setView, user }) {
   );
 }
 
-// Mapeamento das tags visíveis para os valores do select de serviço
-const tagToService = {
-  "Seguros": "Seguros",
-  "Imobiliária": "Mediação Imobiliária",
-  "Mediação Imobiliária": "Mediação Imobiliária",
-  "Automóvel": "Mediação Automóvel",
-  "Mediação Automóvel": "Mediação Automóvel",
-  "Eventos": "Eventos",
+// Mapeamento completo de tags → campos do formulário
+const tagToFields = {
+  // Categorias principais
+  "Seguros":              { service: "Seguros" },
+  "Imobiliária":          { service: "Mediação Imobiliária" },
+  "Automóvel":            { service: "Mediação Automóvel" },
+  "Eventos":              { service: "Eventos" },
+  // Seguros — sub-categorias
+  "Vida":                 { service: "Seguros", subcategory: "Vida" },
+  "Auto":                 { service: "Seguros", subcategory: "Auto" },
+  "Saúde":                { service: "Seguros", subcategory: "Saúde" },
+  "Habitação":            { service: "Seguros", subcategory: "Habitação" },
+  "PETS":                 { service: "Seguros", subcategory: "PETS" },
+  "Multicare":            { service: "Seguros", subcategory: "Multicare" },
+  "Condomínios":          { service: "Seguros", subcategory: "Condomínios" },
+  "Acidentes Pessoais":   { service: "Seguros", subcategory: "Acidentes Pessoais" },
+  "ENI":                  { service: "Seguros", subcategory: "ENI" },
+  // Imobiliária — sub-categorias
+  "Compra":               { service: "Mediação Imobiliária", operacao: "Compra" },
+  "Venda":                { service: "Mediação Imobiliária", operacao: "Venda" },
+  "Apartamentos":         { service: "Mediação Imobiliária", subcategory: "Apartamento" },
+  "Casas":                { service: "Mediação Imobiliária", subcategory: "Casa" },
+  "Terrenos":             { service: "Mediação Imobiliária", subcategory: "Terreno" },
+  // Automóvel — sub-categorias
+  "Novos":                { service: "Mediação Automóvel", subcategory: "Novo" },
+  "Usados":               { service: "Mediação Automóvel", subcategory: "Usado" },
+  "Financiamento":        { service: "Mediação Automóvel", financiamento: "Sim" },
+  "Todas as marcas":      { service: "Mediação Automóvel" },
+  // Eventos — sub-categorias
+  "Casamentos":           { service: "Eventos", subcategory: "Casamento" },
+  "Batizados":            { service: "Eventos", subcategory: "Batizado" },
+  "Eventos Empresariais": { service: "Eventos", subcategory: "Evento de Empresa" },
 };
 
 // MAIN APP COMPONENT
@@ -166,10 +190,14 @@ function MainApp({ user, view, setView, currentService, setCurrentService }) {
   const info = serviceInfo[currentService] || serviceInfo.default;
 
   const handleTagClick = (tag) => {
-    const serviceValue = tagToService[tag];
-    if (serviceValue) {
+    const fields = tagToFields[tag];
+    if (fields) {
+      const serviceValue = fields.service;
       setCurrentService(serviceValue);
       setView("form");
+      // Passa os campos para o formulário via evento customizado
+      window.__ornelasTagFields = fields;
+      window.dispatchEvent(new Event("ornelas-tag-click"));
       setTimeout(() => {
         const el = document.getElementById("formulario");
         if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -195,7 +223,7 @@ function MainApp({ user, view, setView, currentService, setCurrentService }) {
               <p className="text-blue-100 text-lg mb-6">{info.subtitle}</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {info.tags.map(tag => {
-                  const isClickable = !!tagToService[tag];
+                  const isClickable = !!tagToFields[tag];
                   return isClickable ? (
                     <button
                       key={tag}
@@ -238,7 +266,26 @@ function ContactForm({ onServiceChange, selectedService }) {
   const [form, setForm] = useState(emptyForm);
   const f = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
 
-  // Sincroniza serviço quando vem de tag clicável — desativado (tags só fazem scroll)
+  // Preenche o formulário quando o utilizador clica numa tag
+  useEffect(() => {
+    const handler = () => {
+      const fields = window.__ornelasTagFields;
+      if (!fields) return;
+      setForm(prev => ({
+        ...emptyForm,
+        name: prev.name,
+        email: prev.email,
+        phone: prev.phone,
+        message: prev.message,
+        consent: prev.consent,
+        ...fields,
+      }));
+      if (fields.service) onServiceChange(fields.service);
+      window.__ornelasTagFields = null;
+    };
+    window.addEventListener("ornelas-tag-click", handler);
+    return () => window.removeEventListener("ornelas-tag-click", handler);
+  }, []);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -254,7 +301,7 @@ function ContactForm({ onServiceChange, selectedService }) {
 
   return (
     <form id="formulario" onSubmit={submit} className="w-full max-w-md py-4">
-      <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">Pedido de Contacto</h2>
+      <div className="flex items-center justify-between mb-4"><h2 className="text-xl font-bold text-gray-800">Pedido de Contacto</h2>{form.service && (<button type="button" onClick={() => { setForm(emptyForm); onServiceChange("default"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="text-xs text-blue-600 hover:text-blue-800 border border-blue-200 hover:border-blue-400 px-3 py-1 rounded-full transition">← Início</button>)}</div>
       <input placeholder="Nome" value={form.name} onChange={e => f("name", e.target.value)} className={inp} />
       <input placeholder="Email" value={form.email} onChange={e => f("email", e.target.value)} className={inp} />
       <input placeholder="Telefone" value={form.phone} onChange={e => f("phone", e.target.value)} className={inp} />
