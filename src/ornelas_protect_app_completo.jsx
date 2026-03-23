@@ -150,10 +150,32 @@ function NavBar({ view, setView, user }) {
   );
 }
 
+// Mapeamento das tags visíveis para os valores do select de serviço
+const tagToService = {
+  "Seguros": "Seguros",
+  "Imobiliária": "Mediação Imobiliária",
+  "Mediação Imobiliária": "Mediação Imobiliária",
+  "Automóvel": "Mediação Automóvel",
+  "Mediação Automóvel": "Mediação Automóvel",
+  "Eventos": "Eventos",
+};
+
 // MAIN APP COMPONENT
 function MainApp({ user, view, setView, currentService, setCurrentService }) {
   const bg = bgImages[currentService] || bgImages.default;
   const info = serviceInfo[currentService] || serviceInfo.default;
+
+  const handleTagClick = (tag) => {
+    const serviceValue = tagToService[tag];
+    if (serviceValue) {
+      setCurrentService(serviceValue);
+      setView("form");
+      setTimeout(() => {
+        const el = document.getElementById("formulario");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -170,14 +192,25 @@ function MainApp({ user, view, setView, currentService, setCurrentService }) {
               <h2 className="text-3xl font-bold mb-3">{info.title}</h2>
               <p className="text-blue-100 text-lg mb-6">{info.subtitle}</p>
               <div className="flex flex-wrap gap-2 justify-center">
-                {info.tags.map(tag => (
-                  <span key={tag} className="bg-white/20 text-white text-sm px-3 py-1 rounded-full border border-white/30">{tag}</span>
-                ))}
+                {info.tags.map(tag => {
+                  const isClickable = !!tagToService[tag];
+                  return isClickable ? (
+                    <button
+                      key={tag}
+                      onClick={() => handleTagClick(tag)}
+                      className="bg-white/20 hover:bg-white/40 text-white text-sm px-3 py-1 rounded-full border border-white/30 transition cursor-pointer"
+                    >
+                      {tag}
+                    </button>
+                  ) : (
+                    <span key={tag} className="bg-white/20 text-white text-sm px-3 py-1 rounded-full border border-white/30">{tag}</span>
+                  );
+                })}
               </div>
             </div>
           </div>
           <div className="w-full md:w-1/2 bg-gray-50 flex items-start justify-center p-6 overflow-y-auto">
-            <ContactForm onServiceChange={setCurrentService} />
+            <ContactForm onServiceChange={setCurrentService} selectedService={currentService} />
           </div>
         </div>
       ) : view === "dashboard" ? (
@@ -190,7 +223,7 @@ function MainApp({ user, view, setView, currentService, setCurrentService }) {
 }
 
 // CONTACT FORM COMPONENT
-function ContactForm({ onServiceChange }) {
+function ContactForm({ onServiceChange, selectedService }) {
   const emptyForm = {
     name: "", email: "", phone: "", service: "",
     subcategory: "", operacao: "", fracao: "",
@@ -202,6 +235,13 @@ function ContactForm({ onServiceChange }) {
   };
   const [form, setForm] = useState(emptyForm);
   const f = (field, value) => setForm(prev => ({ ...prev, [field]: value }));
+
+  // Sincroniza serviço quando vem de tag clicável
+  useEffect(() => {
+    if (selectedService && selectedService !== "default" && selectedService !== form.service) {
+      setForm(prev => ({ ...emptyForm, name: prev.name, email: prev.email, phone: prev.phone, message: prev.message, consent: prev.consent, service: selectedService }));
+    }
+  }, [selectedService]);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -216,7 +256,7 @@ function ContactForm({ onServiceChange }) {
   const inp = "w-full mb-2 p-2 border border-gray-300 rounded-lg bg-white text-sm";
 
   return (
-    <form onSubmit={submit} className="w-full max-w-md py-4">
+    <form id="formulario" onSubmit={submit} className="w-full max-w-md py-4">
       <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">Pedido de Contacto</h2>
       <input placeholder="Nome" value={form.name} onChange={e => f("name", e.target.value)} className={inp} />
       <input placeholder="Email" value={form.email} onChange={e => f("email", e.target.value)} className={inp} />
