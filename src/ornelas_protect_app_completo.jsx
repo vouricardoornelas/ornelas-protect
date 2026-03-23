@@ -522,7 +522,7 @@ function Dashboard() {
     else
       contexto = `no seu pedido de contacto`;
 
-    const msg = encodeURIComponent(`Olá ${name}! 👋\n\nRecebi o seu pedido de informação ${contexto}.\n\nEstou disponível para o ajudar!\n\nPodemos continuar por aqui no WhatsApp ou prefere que lhe ligue?`);
+    const msg = encodeURIComponent(`Olá ${name}! 👋\n\nRecebi o seu pedido de informação ${contexto}.\n\nEstou disponível para o ajudar!\n\nPodemos continuar por aqui no WhatsApp ou prefere que lhe ligue?\n\n💬 Continuar no WhatsApp: https://wa.me/351913106033\n📞 Prefiro que me ligue: tel:+351913106033`);
     window.open(`https://wa.me/351${phone}?text=${msg}`);
   };
   const stats = { total: leads.length, novo: leads.filter(l=>l.status==='novo').length, contactado: leads.filter(l=>l.status==='contactado').length, fechado: leads.filter(l=>l.status==='fechado').length };
