@@ -28,7 +28,7 @@ const bgImages = {
 
 const serviceInfo = {
   default: { title: "Bem-vindo à Ornelas Protect", subtitle: "As suas decisões protegidas pela experiência", tags: ["Seguros", "Imobiliária", "Automóvel", "Eventos"] },
-  "Seguros": { title: "Seguros para a sua tranquilidade", subtitle: "Protegemos o que mais importa para si e para a sua família", tags: ["Vida", "Auto", "Saúde", "Habitação", "Empresas"] },
+  "Seguros": { title: "Seguros para a sua tranquilidade", subtitle: "Protegemos o que mais importa para si e para a sua família", tags: ["Vida", "Auto", "Saúde", "Habitação", "PETS", "Multicare", "Condomínios", "Acidentes Pessoais", "ENI"] },
   "Mediação Imobiliária": { title: "O imóvel dos seus sonhos", subtitle: "Encontramos a melhor oportunidade no mercado para si", tags: ["Compra", "Venda", "Apartamentos", "Casas", "Terrenos"] },
   "Mediação Automóvel": { title: "O carro certo para si", subtitle: "As melhores marcas com as melhores condições de financiamento", tags: ["Novos", "Usados", "Financiamento", "Todas as marcas"] },
   "Eventos": { title: "Momentos inesquecíveis", subtitle: "Organizamos o seu evento com todo o detalhe e dedicação", tags: ["Casamentos", "Batizados", "Eventos Empresariais"] },
@@ -233,8 +233,17 @@ function ContactForm({ onServiceChange }) {
       {form.service === "Seguros" && (
         <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
           <option value="">Tipo de seguro</option>
-          <option value="Vida">Vida</option><option value="Auto">Auto</option><option value="Moto">Moto</option>
-          <option value="Saúde">Saúde</option><option value="Habitação">Habitação</option><option value="Poupança">Poupança</option>
+          <option value="Vida">Vida</option>
+          <option value="Auto">Auto</option>
+          <option value="Moto">Moto</option>
+          <option value="Saúde">Saúde</option>
+          <option value="Multicare">Multicare</option>
+          <option value="Habitação">Habitação</option>
+          <option value="Condomínios">Condomínios</option>
+          <option value="Acidentes Pessoais">Acidentes Pessoais</option>
+          <option value="PETS">PETS (Animais de Estimação)</option>
+          <option value="ENI">ENI (Trabalhador Independente)</option>
+          <option value="Poupança">Poupança</option>
           <option value="Empresas - Acidentes de Trabalho">Empresas - Acidentes de Trabalho</option>
           <option value="Empresas - Responsabilidade Civil">Empresas - Responsabilidade Civil</option>
           <option value="Outro">Outro</option>
