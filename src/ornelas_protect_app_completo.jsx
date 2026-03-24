@@ -336,48 +336,7 @@ function ContactForm({ onServiceChange, selectedService }) {
 
       {/* IMOBILIÁRIA */}
       {form.service === "Mediação Imobiliária" && (
-        <>
-          <select value={form.operacao} onChange={e => f("operacao", e.target.value)} className={sel}>
-            <option value="">Compra ou Venda?</option>
-            <option value="Compra">Compra</option><option value="Venda">Venda</option>
-          </select>
-          <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
-            <option value="">Tipo de imóvel</option>
-            <option value="Apartamento">Apartamento</option><option value="Casa">Casa</option>
-            <option value="Loja">Loja</option><option value="Terreno">Terreno</option><option value="Outro">Outro</option>
-          </select>
-          {(form.subcategory === "Apartamento" || form.subcategory === "Casa") && (
-            <select value={form.fracao} onChange={e => f("fracao", e.target.value)} className={sel}>
-              <option value="">Tipologia</option>
-              <option value="T0">T0</option><option value="T1">T1</option><option value="T2">T2</option>
-              <option value="T3">T3</option><option value="T4">T4</option><option value="T4+">T4+</option>
-            </select>
-          )}
-          {form.subcategory === "Terreno" && (
-            <>
-              <input placeholder="Área pretendida (m²)" value={form.areaTerreno} onChange={e => f("areaTerreno", e.target.value)} className={inp} />
-              <select value={form.efeitoTerreno} onChange={e => f("efeitoTerreno", e.target.value)} className={sel}>
-                <option value="">Efeito do terreno</option>
-                <option value="Construção Habitacional">Construção Habitacional</option>
-                <option value="Armazéns">Armazéns</option><option value="Empresarial">Empresarial</option><option value="Outro">Outro</option>
-              </select>
-            </>
-          )}
-          {form.subcategory && (
-            <>
-              <select value={form.zonaRegiao} onChange={e => { f("zonaRegiao", e.target.value); f("concelho", ""); }} className={sel}>
-                <option value="">Zona de interesse</option>
-                <option value="Continente">Continente</option><option value="Madeira">Madeira</option><option value="Açores">Açores</option>
-              </select>
-              {form.zonaRegiao && (
-                <select value={form.concelho} onChange={e => f("concelho", e.target.value)} className={sel}>
-                  <option value="">Concelho</option>
-                  {concelhosPorZona[form.zonaRegiao].map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              )}
-            </>
-          )}
-        </>
+        <p className="text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-2">Brevemente Disponível</p>
       )}
 
       {/* AUTOMÓVEL */}
@@ -443,34 +402,7 @@ function ContactForm({ onServiceChange, selectedService }) {
 
       {/* EVENTOS */}
       {form.service === "Eventos" && (
-        <>
-          <select value={form.subcategory} onChange={e => f("subcategory", e.target.value)} className={sel}>
-            <option value="">Tipo de evento</option>
-            <option value="Casamento">Casamento</option><option value="Batizado">Batizado</option>
-            <option value="Evento de Empresa">Evento de Empresa</option><option value="Outro">Outro</option>
-          </select>
-          {(form.subcategory === "Casamento" || form.subcategory === "Batizado" || form.subcategory === "Evento de Empresa") && (
-            <>
-              <select value={form.eventoPessoas} onChange={e => f("eventoPessoas", e.target.value)} className={sel}>
-                <option value="">Número de pessoas</option>
-                <option value="Até 50 pessoas">Até 50 pessoas</option>
-                <option value="50 - 100 pessoas">50 - 100 pessoas</option>
-                <option value="100 - 200 pessoas">100 - 200 pessoas</option>
-                <option value="200 - 500 pessoas">200 - 500 pessoas</option>
-                <option value="Mais de 500 pessoas">Mais de 500 pessoas</option>
-              </select>
-              <input placeholder="Zona de interesse" value={form.eventoZona} onChange={e => f("eventoZona", e.target.value)} className={inp} />
-              <select value={form.eventoValorPessoa} onChange={e => f("eventoValorPessoa", e.target.value)} className={sel}>
-                <option value="">Valor por pessoa disponível</option>
-                <option value="Até 25€/pessoa">Até 25€/pessoa</option>
-                <option value="25€ - 50€/pessoa">25€ - 50€/pessoa</option>
-                <option value="50€ - 100€/pessoa">50€ - 100€/pessoa</option>
-                <option value="100€ - 200€/pessoa">100€ - 200€/pessoa</option>
-                <option value="Mais de 200€/pessoa">Mais de 200€/pessoa</option>
-              </select>
-            </>
-          )}
-        </>
+        <p className="text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-2">Brevemente Disponível</p>
       )}
 
       <textarea placeholder="Mensagem" value={form.message} onChange={e => f("message", e.target.value)} className={inp} rows={3} />
