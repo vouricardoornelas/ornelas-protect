@@ -2,6 +2,7 @@
 
 // IMPORTS
 import { useState, useEffect } from "react";
+import emailjs from "@emailjs/browser";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
@@ -293,6 +294,19 @@ function ContactForm({ onServiceChange, selectedService }) {
     e.preventDefault();
     if (!form.consent) return alert("Consentimento obrigatório (RGPD)");
     await addDoc(collection(db, "leads"), { ...form, status: "novo", notes: "", date: new Date().toISOString() });
+    emailjs.send(
+      "service_iaq3ixh",
+      "template_7s9cgxr",
+      {
+        nome: form.name,
+        email: form.email,
+        telefone: form.phone,
+        servico: form.service,
+        concelho: form.concelho,
+        mensagem: form.message || "—",
+      },
+      "P-Rd29P00q6qqIhiz"
+    );
     alert("Pedido recebido. Vamos entrar em contacto brevemente.");
     setForm(emptyForm);
     onServiceChange("default");
