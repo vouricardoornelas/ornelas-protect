@@ -97,7 +97,7 @@ function Login({ onBack }) {
       <div className="hidden md:flex w-1/2 relative items-center justify-center" style={{backgroundImage: `url(${bgImages.default})`, backgroundSize: "cover", backgroundPosition: "center"}}>
         <div className="absolute inset-0 bg-blue-900/70" />
         <div className="relative text-white text-center p-8">
-          <img src="/Logo_Ornelas_Protect_final3.png" className="w-64 mx-auto mb-6 rounded-xl shadow-lg" />
+          <img src="/Logo_Ornelas_Protect.png" className="w-64 mx-auto mb-6 rounded-xl shadow-lg" />
           <h1 className="text-3xl font-bold mb-2">Ornelas Protect</h1>
           <p className="text-blue-200 text-lg">As suas decisões protegidas pela experiência</p>
         </div>
@@ -122,7 +122,7 @@ function NavBar({ view, setView, user }) {
     <div className="bg-blue-900 text-white px-4 py-2 flex items-center shadow relative">
       {/* Logo clicável */}
       <button onClick={() => setOpen(!open)} className="flex items-center gap-2 focus:outline-none">
-        <img src="/Logo_Ornelas_Protect_final3.png" className="w-10 h-10 rounded-lg shadow" />
+        <img src="/Logo_Ornelas_Protect.png" className="w-10 h-10 rounded-lg shadow" />
       </button>
 
       {/* Menu dropdown */}
@@ -220,7 +220,7 @@ function MainApp({ user, view, setView, currentService, setCurrentService }) {
           <div className="hidden md:flex w-1/2 relative flex-col items-center justify-center" style={{backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center"}}>
             <div className="absolute inset-0 bg-blue-900/65" />
             <div className="relative text-white text-center p-10">
-              <img src="/Logo_Ornelas_Protect_final3.png" className="w-72 mx-auto mb-6 rounded-xl shadow-lg" />
+              <img src="/Logo_Ornelas_Protect.png" className="w-72 mx-auto mb-6 rounded-xl shadow-lg" />
               <h2 className="text-3xl font-bold mb-3">{info.title}</h2>
               <p className="text-blue-100 text-lg mb-6">{info.subtitle}</p>
               <div className="flex flex-wrap gap-2 justify-center">
