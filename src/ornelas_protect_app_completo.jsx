@@ -27,7 +27,7 @@ const bgImages = {
 };
 
 const serviceInfo = {
-  default: { title: "Bem-vindo à Ornelas Protect", subtitle: "As suas decisões protegidas pela experiência", tags: ["Seguros", "Imobiliária", "Automóvel", "Eventos"] },
+  default: { title: "Bem-vindo à Ornelas Protect", subtitle: "As suas decisões protegidas pela experiência", tags: ["Seguros", "Mediação Automóvel", "Mediação Imobiliária", "Eventos"] },
   "Seguros": { title: "Seguros para a sua tranquilidade", subtitle: "Protegemos o que mais importa para si e para a sua família", tags: ["Vida", "Auto", "Saúde", "Habitação", "PETS", "Multicare", "Condomínios", "Acidentes Pessoais", "ENI"] },
   "Mediação Imobiliária": { title: "O imóvel dos seus sonhos", subtitle: "Encontramos a melhor oportunidade no mercado para si", tags: ["Compra", "Venda", "Apartamentos", "Casas", "Terrenos"] },
   "Mediação Automóvel": { title: "O carro certo para si", subtitle: "As melhores marcas com as melhores condições de financiamento", tags: ["Novos", "Usados", "Financiamento", "Todas as marcas"] },
@@ -155,7 +155,9 @@ const tagToFields = {
   // Categorias principais
   "Seguros":              { service: "Seguros" },
   "Imobiliária":          { service: "Mediação Imobiliária" },
+  "Mediação Imobiliária": { service: "Mediação Imobiliária" },
   "Automóvel":            { service: "Mediação Automóvel" },
+  "Mediação Automóvel":   { service: "Mediação Automóvel" },
   "Eventos":              { service: "Eventos" },
   // Seguros — sub-categorias
   "Vida":                 { service: "Seguros", subcategory: "Vida" },
@@ -308,8 +310,8 @@ function ContactForm({ onServiceChange, selectedService }) {
       <select value={form.service} onChange={e => { const s = e.target.value; setForm({...emptyForm, name: form.name, email: form.email, phone: form.phone, message: form.message, consent: form.consent, service: s}); onServiceChange(s || "default"); }} className={sel}>
         <option value="">Tipo de serviço</option>
         <option value="Seguros">Seguros</option>
-        <option value="Mediação Imobiliária">Mediação Imobiliária</option>
         <option value="Mediação Automóvel">Mediação Automóvel</option>
+        <option value="Mediação Imobiliária">Mediação Imobiliária</option>
         <option value="Eventos">Eventos</option>
       </select>
 
