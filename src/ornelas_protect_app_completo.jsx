@@ -218,7 +218,7 @@ function MainApp({ user, view, setView, currentService, setCurrentService }) {
           <div className="hidden md:flex w-1/2 relative flex-col items-center justify-center" style={{backgroundImage: `url(${bg})`, backgroundSize: "cover", backgroundPosition: "center"}}>
             <div className="absolute inset-0 bg-blue-900/65" />
             <div className="relative text-white text-center p-10">
-              <img src="/Logo_Ornelas_Protect_final3.png" className="w-64 mx-auto mb-6 rounded-xl shadow-lg" />
+              <img src="/Logo_Ornelas_Protect_final3.png" className="w-72 mx-auto mb-6 rounded-xl shadow-lg" />
               <h2 className="text-3xl font-bold mb-3">{info.title}</h2>
               <p className="text-blue-100 text-lg mb-6">{info.subtitle}</p>
               <div className="flex flex-wrap gap-2 justify-center">
