@@ -317,7 +317,7 @@ function ContactForm({ onServiceChange, selectedService }) {
 
   return (
     <form id="formulario" onSubmit={submit} className="w-full max-w-md py-4">
-      <div className="flex items-center justify-between mb-4"><h2 className="text-xl font-bold text-gray-800">Pedido de Contacto</h2>{form.service && (<button type="button" onClick={() => { setForm(emptyForm); onServiceChange("default"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="text-xs text-blue-600 hover:text-blue-800 border border-blue-200 hover:border-blue-400 px-3 py-1 rounded-full transition">← Início</button>)}</div>
+      <div className="flex items-center justify-between mb-4"><h2 className="text-xl font-bold text-gray-800">Pedido de Contacto</h2><button type="button" onClick={() => { setForm(emptyForm); onServiceChange("default"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="text-xs text-blue-600 hover:text-blue-800 border border-blue-200 hover:border-blue-400 px-3 py-1 rounded-full transition">🏠 Início</button></div>
       <input placeholder="Nome" value={form.name} onChange={e => f("name", e.target.value)} className={inp} />
       <input placeholder="Email" value={form.email} onChange={e => f("email", e.target.value)} className={inp} />
       <input placeholder="Telefone" value={form.phone} onChange={e => f("phone", e.target.value)} className={inp} />
@@ -391,25 +391,13 @@ function ContactForm({ onServiceChange, selectedService }) {
           </select>
           <select value={form.preco} onChange={e => f("preco", e.target.value)} className={sel}>
             <option value="">Intervalo de preço</option>
-            {form.subcategory === "Novo" ? (
-              <>
-                <option value="Até 20.000€">Até 20.000€</option>
-                <option value="20.000€ a 30.000€">20.000€ a 30.000€</option>
-                <option value="30.000€ a 40.000€">30.000€ a 40.000€</option>
-                <option value="40.000€ a 50.000€">40.000€ a 50.000€</option>
-                <option value="+ 50.000€">+ 50.000€</option>
-              </>
-            ) : (
-              <>
-                <option value="Até 10.000€">Até 10.000€</option>
-                <option value="10.000€ a 17.500€">10.000€ a 17.500€</option>
-                <option value="17.500€ a 25.000€">17.500€ a 25.000€</option>
-                <option value="25.000€ a 32.500€">25.000€ a 32.500€</option>
-                <option value="32.500€ a 40.000€">32.500€ a 40.000€</option>
-                <option value="40.000€ a 50.000€">40.000€ a 50.000€</option>
-                <option value="+ 50.000€">+ 50.000€</option>
-              </>
-            )}
+            <option value="Até 10.000€">Até 10.000€</option>
+            <option value="10.000€ a 17.500€">10.000€ a 17.500€</option>
+            <option value="17.500€ a 25.000€">17.500€ a 25.000€</option>
+            <option value="25.000€ a 32.500€">25.000€ a 32.500€</option>
+            <option value="32.500€ a 40.000€">32.500€ a 40.000€</option>
+            <option value="40.000€ a 50.000€">40.000€ a 50.000€</option>
+            <option value="+ 50.000€">+ 50.000€</option>
           </select>
           <select value={form.financiamento} onChange={e => f("financiamento", e.target.value)} className={sel}>
             <option value="">Precisa de financiamento?</option>
