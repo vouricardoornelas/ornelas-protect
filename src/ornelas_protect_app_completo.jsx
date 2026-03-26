@@ -262,7 +262,7 @@ function ContactForm({ onServiceChange, selectedService }) {
     subcategory: "", operacao: "", fracao: "",
     zonaRegiao: "", concelho: "",
     areaTerreno: "", efeitoTerreno: "",
-    marca: "", combustivel: "", ivaDedutivel: "", preco: "", financiamento: "", prestacao: "", kms: "",
+    marca: "", combustivel: "", ivaDedutivel: "", preco: "", financiamento: "", tipoFinanciamento: "", prestacao: "", kms: "",
     eventoPessoas: "", eventoZona: "", eventoValorPessoa: "",
     message: "", consent: false
   };
@@ -401,6 +401,15 @@ function ContactForm({ onServiceChange, selectedService }) {
             <option value="">Precisa de financiamento?</option>
             <option value="Sim">Sim</option><option value="Não">Não</option>
           </select>
+          {form.financiamento === "Sim" && form.subcategory === "Novo" && (
+            <select value={form.tipoFinanciamento} onChange={e => f("tipoFinanciamento", e.target.value)} className={sel}>
+              <option value="">Tipo de financiamento</option>
+              <option value="Crédito">Crédito</option>
+              <option value="Leasing">Leasing</option>
+              <option value="ALD">ALD</option>
+              <option value="Renting">Renting</option>
+            </select>
+          )}
           {form.financiamento === "Sim" && (
             <input placeholder="Valor de prestação desejado (€/mês)" value={form.prestacao} onChange={e => f("prestacao", e.target.value)} className={inp} />
           )}
