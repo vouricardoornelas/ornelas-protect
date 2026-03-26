@@ -392,10 +392,12 @@ function ContactForm({ onServiceChange, selectedService }) {
           <select value={form.preco} onChange={e => f("preco", e.target.value)} className={sel}>
             <option value="">Intervalo de preço</option>
             <option value="Até 10.000€">Até 10.000€</option>
-            <option value="10.000€ - 20.000€">10.000€ - 20.000€</option>
-            <option value="20.000€ - 35.000€">20.000€ - 35.000€</option>
-            <option value="35.000€ - 50.000€">35.000€ - 50.000€</option>
-            <option value="Mais de 50.000€">Mais de 50.000€</option>
+            <option value="10.000€ a 17.500€">10.000€ a 17.500€</option>
+            <option value="17.500€ a 25.000€">17.500€ a 25.000€</option>
+            <option value="25.000€ a 32.500€">25.000€ a 32.500€</option>
+            <option value="32.500€ a 40.000€">32.500€ a 40.000€</option>
+            <option value="40.000€ a 50.000€">40.000€ a 50.000€</option>
+            <option value="+ 50.000€">+ 50.000€</option>
           </select>
           <select value={form.financiamento} onChange={e => f("financiamento", e.target.value)} className={sel}>
             <option value="">Precisa de financiamento?</option>
