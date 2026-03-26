@@ -391,13 +391,25 @@ function ContactForm({ onServiceChange, selectedService }) {
           </select>
           <select value={form.preco} onChange={e => f("preco", e.target.value)} className={sel}>
             <option value="">Intervalo de preço</option>
-            <option value="Até 10.000€">Até 10.000€</option>
-            <option value="10.000€ a 17.500€">10.000€ a 17.500€</option>
-            <option value="17.500€ a 25.000€">17.500€ a 25.000€</option>
-            <option value="25.000€ a 32.500€">25.000€ a 32.500€</option>
-            <option value="32.500€ a 40.000€">32.500€ a 40.000€</option>
-            <option value="40.000€ a 50.000€">40.000€ a 50.000€</option>
-            <option value="+ 50.000€">+ 50.000€</option>
+            {form.subcategory === "Novo" ? (
+              <>
+                <option value="Até 20.000€">Até 20.000€</option>
+                <option value="20.000€ a 30.000€">20.000€ a 30.000€</option>
+                <option value="30.000€ a 40.000€">30.000€ a 40.000€</option>
+                <option value="40.000€ a 50.000€">40.000€ a 50.000€</option>
+                <option value="+ 50.000€">+ 50.000€</option>
+              </>
+            ) : (
+              <>
+                <option value="Até 10.000€">Até 10.000€</option>
+                <option value="10.000€ a 17.500€">10.000€ a 17.500€</option>
+                <option value="17.500€ a 25.000€">17.500€ a 25.000€</option>
+                <option value="25.000€ a 32.500€">25.000€ a 32.500€</option>
+                <option value="32.500€ a 40.000€">32.500€ a 40.000€</option>
+                <option value="40.000€ a 50.000€">40.000€ a 50.000€</option>
+                <option value="+ 50.000€">+ 50.000€</option>
+              </>
+            )}
           </select>
           <select value={form.financiamento} onChange={e => f("financiamento", e.target.value)} className={sel}>
             <option value="">Precisa de financiamento?</option>
