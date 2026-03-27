@@ -31,20 +31,6 @@ const serviceInfo = {
   "Mediação Automóvel": { title: "O carro certo para si", subtitle: "As melhores marcas com as melhores condições de financiamento", tags: ["Novos", "Usados", "Financiamento", "Todas as marcas"] },
 };
 
-const concelhosPorZona = {
-  "Continente": [
-    "Abrantes","Águeda","Aguiar da Beira","Alandroal","Albergaria-a-Velha","Albufeira","Alcácer do Sal","Alcanena","Alcobaça","Alcochete","Alcoutim","Alenquer","Alfândega da Fé","Alijó","Aljezur","Aljustrel","Almada","Almeida","Almeirim","Almodôvar","Alpiarça","Alter do Chão","Alvaiázere","Alvito","Amadora","Amarante","Amares","Anadia","Ansião","Arcos de Valdevez","Arganil","Armamar","Arouca","Arraiolos","Arronches","Arruda dos Vinhos","Aveiro","Avis","Azambuja",
-    "Baião","Barcelos","Barrancos","Barreiro","Beja","Belmonte","Benavente","Bombarral","Borba","Braga","Bragança","Cabeceiras de Basto","Cadaval","Caldas da Rainha","Caminha","Cantanhede","Carrazeda de Ansiães","Carregal do Sal","Cartaxo","Cascais","Castelo Branco","Castelo de Paiva","Castelo de Vide","Castro Daire","Castro Marim","Castro Verde","Celorico da Beira","Celorico de Basto","Chaves","Cinfães","Coimbra","Condeixa-a-Nova","Constância","Coruche","Covilhã","Crato","Cuba",
-    "Elvas","Entroncamento","Espinho","Esposende","Estarreja","Estremoz","Évora","Fafe","Faro","Felgueiras","Ferreira do Alentejo","Ferreira do Zêzere","Figueira da Foz","Figueira de Castelo Rodrigo","Figueiró dos Vinhos","Fornos de Algodres","Freixo de Espada à Cinta","Fronteira","Fundão",
-    "Gavião","Góis","Gondomar","Gouveia","Grândola","Guarda","Guimarães","Idanha-a-Nova","Ílhavo","Lagos","Lamego","Leiria","Lisboa","Loulé","Loures","Lousã","Lousada","Mação","Macedo de Cavaleiros","Mafra","Maia","Mangualde","Manteigas","Marco de Canaveses","Marinha Grande","Marvão","Matosinhos","Mealhada","Meda","Melgaço","Mesão Frio","Miranda do Corvo","Miranda do Douro","Mirandela","Mogadouro","Moimenta da Beira","Moita","Monção","Monchique","Mondim de Basto","Monforte","Montalegre","Montemor-o-Novo","Montemor-o-Velho","Montijo","Mora","Mortágua","Moura","Mourão","Murça","Murtosa",
-    "Nazaré","Nelas","Nisa","Óbidos","Odemira","Odivelas","Oeiras","Oleiros","Olhão","Oliveira de Azeméis","Oliveira de Frades","Oliveira do Bairro","Oliveira do Hospital","Ourém","Ourique","Ovar",
-    "Paços de Ferreira","Palmela","Pampilhosa da Serra","Paredes","Paredes de Coura","Pedrógão Grande","Penacova","Penafiel","Penalva do Castelo","Penamacor","Penedono","Penela","Peniche","Peso da Régua","Pinhel","Pombal","Ponte da Barca","Ponte de Lima","Ponte de Sor","Portalegre","Portel","Portimão","Porto","Porto de Mós","Póvoa de Lanhoso","Póvoa de Varzim","Proença-a-Nova",
-    "Redondo","Reguengos de Monsaraz","Resende","Ribeira de Pena","Rio Maior","Sabrosa","Sabugal","Salvaterra de Magos","Santa Comba Dão","Santa Maria da Feira","Santa Marta de Penaguião","Santarém","Santiago do Cacém","Santo Tirso","São Brás de Alportel","São João da Madeira","São João da Pesqueira","São Pedro do Sul","Sardoal","Sátão","Seia","Seixal","Serpa","Sernancelhe","Sesimbra","Setúbal","Sever do Vouga","Silves","Sines","Sintra","Sobral de Monte Agraço","Soure","Sousel",
-    "Tábua","Tabuaço","Tarouca","Tavira","Terras de Bouro","Tomar","Tondela","Torre de Moncorvo","Torres Novas","Torres Vedras","Trancoso","Trofa","Vagos","Vale de Cambra","Valença","Valongo","Valpaços","Vendas Novas","Viana do Alentejo","Viana do Castelo","Vidigueira","Vieira do Minho","Vila de Rei","Vila do Bispo","Vila do Conde","Vila Flor","Vila Franca de Xira","Vila Nova da Barquinha","Vila Nova de Cerveira","Vila Nova de Famalicão","Vila Nova de Foz Côa","Vila Nova de Gaia","Vila Nova de Paiva","Vila Nova de Poiares","Vila Pouca de Aguiar","Vila Real","Vila Real de Santo António","Vila Velha de Ródão","Vila Verde","Vila Viçosa","Vimioso","Vinhais","Viseu","Vizela"
-  ],
-  "Madeira": ["Calheta","Câmara de Lobos","Funchal","Machico","Ponta do Sol","Porto Moniz","Porto Santo","Ribeira Brava","Santa Cruz","Santana","São Vicente"],
-  "Açores": ["Angra do Heroísmo","Calheta (São Jorge)","Corvo","Horta","Lagoa (São Miguel)","Lajes das Flores","Lajes do Pico","Madalena","Nordeste","Ponta Delgada","Povoação","Praia da Vitória","Ribeira Grande","Santa Cruz da Graciosa","Santa Cruz das Flores","São Roque do Pico","Velas","Vila do Porto","Vila Franca do Campo"]
-};
 
 // APP PRINCIPAL
 export default function OrnelasProtectApp() {
@@ -242,11 +228,8 @@ function MainApp({ user, view, setView, currentService, setCurrentService }) {
 function ContactForm({ onServiceChange, selectedService }) {
   const emptyForm = {
     name: "", email: "", phone: "", service: "",
-    subcategory: "", operacao: "", fracao: "",
-    zonaRegiao: "", concelho: "",
-    areaTerreno: "", efeitoTerreno: "",
+    subcategory: "",
     marca: "", combustivel: "", ivaDedutivel: "", preco: "", financiamento: "", tipoFinanciamento: "", prestacao: "", kms: "",
-    eventoPessoas: "", eventoZona: "", eventoValorPessoa: "",
     message: "", consent: false
   };
   const [form, setForm] = useState(emptyForm);
@@ -431,16 +414,12 @@ function Dashboard() {
   const updateStatus = async (id, status) => { await updateDoc(doc(db, "leads", id), { status }); load(); };
   const updateNotes = async (id, notes) => { await updateDoc(doc(db, "leads", id), { notes }); };
   const whatsapp = (lead) => {
-    const { phone, name, service, subcategory, operacao, marca, combustivel, eventoPessoas } = lead;
+    const { phone, name, service, subcategory, marca, combustivel } = lead;
     let contexto = "";
     if (service === "Seguros" && subcategory)
       contexto = `para um seguro de *${subcategory}*`;
     else if (service === "Seguros")
       contexto = `na área de *Seguros*`;
-    else if (service === "Mediação Imobiliária" && subcategory && operacao)
-      contexto = `para *${operacao}* de *${subcategory}*`;
-    else if (service === "Mediação Imobiliária")
-      contexto = `na área de *Mediação Imobiliária*`;
     else if (service === "Mediação Automóvel" && marca)
       contexto = `para um veículo *${subcategory || ""}* da marca *${marca}*${combustivel ? ` (${combustivel})` : ""}`;
     else if (service === "Mediação Automóvel")
@@ -468,12 +447,6 @@ function Dashboard() {
           <div className="mt-2 text-sm text-gray-700 grid grid-cols-2 gap-1">
             {l.service && <p>Serviço: <strong>{l.service}</strong></p>}
             {l.subcategory && <p>Subcategoria: <strong>{l.subcategory}</strong></p>}
-            {l.operacao && <p>Operação: <strong>{l.operacao}</strong></p>}
-            {l.fracao && <p>Tipologia: <strong>{l.fracao}</strong></p>}
-            {l.zonaRegiao && <p>Zona: <strong>{l.zonaRegiao}</strong></p>}
-            {l.concelho && <p>Concelho: <strong>{l.concelho}</strong></p>}
-            {l.areaTerreno && <p>Área: <strong>{l.areaTerreno}</strong></p>}
-            {l.efeitoTerreno && <p>Efeito: <strong>{l.efeitoTerreno}</strong></p>}
             {l.marca && <p>Marca: <strong>{l.marca}</strong></p>}
             {l.combustivel && <p>Combustível: <strong>{l.combustivel}</strong></p>}
             {l.ivaDedutivel && <p>IVA Dedutível: <strong>{l.ivaDedutivel}</strong></p>}
@@ -481,9 +454,6 @@ function Dashboard() {
             {l.financiamento && <p>Financiamento: <strong>{l.financiamento}</strong></p>}
             {l.prestacao && <p>Prestação: <strong>{l.prestacao}</strong></p>}
             {l.kms && <p>Kms: <strong>{l.kms}</strong></p>}
-            {l.eventoPessoas && <p>Pessoas: <strong>{l.eventoPessoas}</strong></p>}
-            {l.eventoZona && <p>Zona evento: <strong>{l.eventoZona}</strong></p>}
-            {l.eventoValorPessoa && <p>Valor/pessoa: <strong>{l.eventoValorPessoa}</strong></p>}
           </div>
           {l.message && <p className="text-sm text-gray-600 mt-1 italic">"{l.message}"</p>}
           <p className="text-sm mt-2">Status: <strong className={l.status==='novo'?'text-yellow-600':l.status==='contactado'?'text-blue-600':'text-green-600'}>{l.status}</strong></p>
