@@ -22,17 +22,13 @@ const auth = getAuth(app);
 const bgImages = {
   default: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200&q=80",
   "Seguros": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80",
-  "Mediação Imobiliária": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&q=80",
   "Mediação Automóvel": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1200&q=80",
-  "Eventos": "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1200&q=80",
 };
 
 const serviceInfo = {
-  default: { title: "Bem-vindo à Ornelas Protect", subtitle: "As suas decisões protegidas pela experiência", tags: ["Seguros", "Mediação Automóvel", "Mediação Imobiliária", "Eventos"] },
+  default: { title: "Bem-vindo à Ornelas Protect", subtitle: "As suas decisões protegidas pela experiência", tags: ["Seguros", "Mediação Automóvel"] },
   "Seguros": { title: "Seguros para a sua tranquilidade", subtitle: "Protegemos o que mais importa para si e para a sua família", tags: ["Vida", "Auto", "Saúde", "Habitação", "PETS", "Multicare", "Condomínios", "Acidentes Pessoais", "ENI"] },
-  "Mediação Imobiliária": { title: "O imóvel dos seus sonhos", subtitle: "Encontramos a melhor oportunidade no mercado para si", tags: ["Compra", "Venda", "Apartamentos", "Casas", "Terrenos"] },
   "Mediação Automóvel": { title: "O carro certo para si", subtitle: "As melhores marcas com as melhores condições de financiamento", tags: ["Novos", "Usados", "Financiamento", "Todas as marcas"] },
-  "Eventos": { title: "Momentos inesquecíveis", subtitle: "Organizamos o seu evento com todo o detalhe e dedicação", tags: ["Casamentos", "Batizados", "Eventos Empresariais"] },
 };
 
 const concelhosPorZona = {
@@ -155,11 +151,8 @@ function NavBar({ view, setView, user }) {
 const tagToFields = {
   // Categorias principais
   "Seguros":              { service: "Seguros" },
-  "Imobiliária":          { service: "Mediação Imobiliária" },
-  "Mediação Imobiliária": { service: "Mediação Imobiliária" },
   "Automóvel":            { service: "Mediação Automóvel" },
   "Mediação Automóvel":   { service: "Mediação Automóvel" },
-  "Eventos":              { service: "Eventos" },
   // Seguros — sub-categorias
   "Vida":                 { service: "Seguros", subcategory: "Vida" },
   "Auto":                 { service: "Seguros", subcategory: "Auto" },
@@ -170,21 +163,11 @@ const tagToFields = {
   "Condomínios":          { service: "Seguros", subcategory: "Condomínios" },
   "Acidentes Pessoais":   { service: "Seguros", subcategory: "Acidentes Pessoais" },
   "ENI":                  { service: "Seguros", subcategory: "ENI" },
-  // Imobiliária — sub-categorias
-  "Compra":               { service: "Mediação Imobiliária", operacao: "Compra" },
-  "Venda":                { service: "Mediação Imobiliária", operacao: "Venda" },
-  "Apartamentos":         { service: "Mediação Imobiliária", subcategory: "Apartamento" },
-  "Casas":                { service: "Mediação Imobiliária", subcategory: "Casa" },
-  "Terrenos":             { service: "Mediação Imobiliária", subcategory: "Terreno" },
   // Automóvel — sub-categorias
   "Novos":                { service: "Mediação Automóvel", subcategory: "Novo" },
   "Usados":               { service: "Mediação Automóvel", subcategory: "Usado" },
   "Financiamento":        { service: "Mediação Automóvel", financiamento: "Sim" },
   "Todas as marcas":      { service: "Mediação Automóvel" },
-  // Eventos — sub-categorias
-  "Casamentos":           { service: "Eventos", subcategory: "Casamento" },
-  "Batizados":            { service: "Eventos", subcategory: "Batizado" },
-  "Eventos Empresariais": { service: "Eventos", subcategory: "Evento de Empresa" },
 };
 
 // MAIN APP COMPONENT
@@ -325,8 +308,6 @@ function ContactForm({ onServiceChange, selectedService }) {
         <option value="">Tipo de serviço</option>
         <option value="Seguros">Seguros</option>
         <option value="Mediação Automóvel">Mediação Automóvel</option>
-        <option value="Mediação Imobiliária">Mediação Imobiliária</option>
-        <option value="Eventos">Eventos</option>
       </select>
 
       {/* SEGUROS */}
@@ -348,11 +329,6 @@ function ContactForm({ onServiceChange, selectedService }) {
           <option value="Empresas - Responsabilidade Civil">Empresas - Responsabilidade Civil</option>
           <option value="Outro">Outro</option>
         </select>
-      )}
-
-      {/* IMOBILIÁRIA */}
-      {form.service === "Mediação Imobiliária" && (
-        <p className="text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-2">Brevemente Disponível</p>
       )}
 
       {/* AUTOMÓVEL */}
@@ -427,11 +403,6 @@ function ContactForm({ onServiceChange, selectedService }) {
         </>
       )}
 
-      {/* EVENTOS */}
-      {form.service === "Eventos" && (
-        <p className="text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-2">Brevemente Disponível</p>
-      )}
-
       <textarea placeholder="Mensagem" value={form.message} onChange={e => f("message", e.target.value)} className={inp} rows={3} />
       <label className="text-sm flex items-start gap-2 mb-4 text-gray-600">
         <input type="checkbox" checked={form.consent} onChange={e => f("consent", e.target.checked)} className="mt-1" />
@@ -474,10 +445,6 @@ function Dashboard() {
       contexto = `para um veículo *${subcategory || ""}* da marca *${marca}*${combustivel ? ` (${combustivel})` : ""}`;
     else if (service === "Mediação Automóvel")
       contexto = `na área de *Mediação Automóvel*`;
-    else if (service === "Eventos" && subcategory)
-      contexto = `para organização de *${subcategory}*${eventoPessoas ? ` com ${eventoPessoas}` : ""}`;
-    else if (service === "Eventos")
-      contexto = `na área de *Eventos*`;
     else
       contexto = `no seu pedido de contacto`;
 
